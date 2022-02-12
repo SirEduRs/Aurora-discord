@@ -1,40 +1,11 @@
 __pycache__/
 .env
-Utils/ConnectionMTA.py
-Utils/Heroku.py
-Cogs/MTA.py
-Cogs/Tasks.py
-Utils/Archives/
+Bot/Utils/ConnectionMTA.py
+Bot/Utils/Heroku.py
+Bot/Cogs/MTA.py
+Bot/Cogs/Tasks.py
+Bot/Utils/Archives/
 
-__pypackages__/
-
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.py[cod]
-*$py.class
-
-# C extensions
-*.so
-
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-share/python-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
-MANIFEST
 
 #poetry
 poetry.lock

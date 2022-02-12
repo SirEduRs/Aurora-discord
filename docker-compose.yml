@@ -1,0 +1,55 @@
+version: '3.9'
+
+networks:
+  aurorabot: ~
+
+services:
+  database:
+    image: postgres:14.1
+    networks:
+      - aurorabot
+    volumes:
+      - dbdata:/var/lib/postgresql/data
+    restart: unless-stopped
+    container_name: postgres
+    env_file:
+      - .env
+    environment:
+      - POSTGRES_USER=${PG_USER}
+      - POSTGRES_PASSWORD=${PG_PASS}
+      - POSTGRES_DB=${PG_DB}
+
+  aurora:
+    depends_on:
+      - database
+    env_file:
+      - .env
+    build:
+      context: ./Bot/
+      dockerfile: Dockerfile
+    networks:
+      - aurorabot
+    volumes:
+      - ./Bot/:/bot/
+      - /var/run/docker.sock:/var/run/docker.sock
+    container_name: aurorabot
+    restart: unless-stopped
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - PASTEBIN_TOKEN=${PASTEBIN_TOKEN}
+      - PASTEBIN_USER=${PASTEBIN_USER}
+      - PASTEBIN_PASS=${PASTEBIN_PASS}
+      - USERM=${USERM}
+      - PASSM=${PASSM}
+      - PG_DB=${PG_DB}
+      - PG_USER=${PG_USER}
+      - PG_PASS=${PG_PASS}
+      - SERVIP=${SERVIP}
+      - API_HEROKU=${API_HEROKU}
+      - LAVALINK_PASS=${LAVALINK_PASS}
+
+
+
+volumes:
+  dbdata:
+    driver: local
