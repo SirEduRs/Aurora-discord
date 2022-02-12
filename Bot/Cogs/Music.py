@@ -7,6 +7,7 @@ from disnake.ext.commands import (  # type: ignore
     Context,
     command,
     cooldown,
+    guild_only,
 )
 from humanize import precisedelta
 
@@ -28,6 +29,7 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
         description='Tocar uma música do Youtube ou Spotify',
         usage='play <nome ou link>'
     )
+    @guild_only()
     async def _play(self, ctx: Context[AuroraClass], *, music: str):
         channel = getattr(ctx.author.voice, 'channel', None)  # type: ignore
         if not channel:
@@ -36,11 +38,10 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
             )
 
         if not ctx.voice_client:
-            if ctx.me.voice:
+            if ctx.me.voice: # type: ignore
                 return await Embed(
                     ctx, message="Eu já estou em um canal de voz !"
                 )
-            #node = self.pomice.get_best_node(algorithm=NodeAlgorithm.by_ping)
             node = self.pomice.get_node(identifier='São Paulo')
             await ctx.author.voice.channel.connect(
                 cls=PlayerMusic(node=node)
@@ -96,30 +97,6 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
 
         if not player.is_playing:
             await player.do_next()
-
-    """@command(
-        name='leave',
-        aliases=['sair'],
-        description='Sair do canal de voz',
-        usage='leave'
-    )
-    async def _leave(self, ctx: Context[AuroraClass]):
-        channel = getattr(ctx.author.voice, 'channel', None)  # type: ignore
-        if not channel:
-            return await Embed(
-                ctx, message="Você precisa estar em um canal de voz !"
-            )
-
-        if not ctx.voice_client:
-            return await Embed(
-                ctx, message="Eu não estou em um canal de voz !"
-            )
-
-        player: PlayerMusic = ctx.voice_client  # type: ignore
-
-
-
-        await ctx.voice_client.disconnect()"""
 
     @command(
         name='pause',

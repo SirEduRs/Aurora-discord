@@ -54,7 +54,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
         ctx: commands.Context[AuroraClass],
         userb: disnake.Member = None,
         *,
-        reason: str = ''
+        reason: str = None
     ):
         reason = reason or "Nenhum motivo especificado."
         if userb is not None:
@@ -96,7 +96,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
         ctx: commands.Context[AuroraClass],
         userk: disnake.Member = None,
         *,
-        reason: str = ''
+        reason: str = None
     ):
         reason = reason or "Nenhum motivo especificado."
         if userk is not None:
@@ -138,7 +138,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
         ctx: commands.Context[AuroraClass],
         useru: disnake.User = None,
         *,
-        reason: str = ''
+        reason: str = None
     ):
         reason = reason or "Nenhum motivo especificado."
         if useru is not None:
@@ -212,7 +212,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
         inter: disnake.ApplicationCommandInteraction,
         member: disnake.Member,
         time: Any = "Máximo",
-        reason: str = ''
+        reason: str = None
     ):
         """Mute um membro por um tempo específico.
 
@@ -271,7 +271,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
         self,
         inter: disnake.ApplicationCommandInteraction,
         member: disnake.Member,
-        reason: str = ''
+        reason: str = None
     ):
         """Desmuta um membro.
 

@@ -44,8 +44,12 @@ class UtilityCog(commands.Cog, name=":toolbox: Utilidades"):  # type: ignore
     @commands.guild_only()
     async def _emojis(self, ctx: commands.Context[commands.Bot]):
         guild_emojis: Tuple[disnake.Emoji] = ctx.guild.emojis
-        list_embeds = Paginator.paginate_emojis(split_list(guild_emojis, 25), ctx.guild)
-        await ctx.send(embed=list_embeds[0], view=Paginator(list_embeds, ctx.author.id))  # type: ignore
+        list_embeds = Paginator.paginate_emojis(
+            split_list(guild_emojis, 25), ctx.guild
+        )
+        await ctx.send(
+            embed=list_embeds[0], view=Paginator(list_embeds, ctx.author.id)
+        )  # type: ignore
 
 
 def setup(bot: AuroraClass):

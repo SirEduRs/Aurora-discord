@@ -212,13 +212,16 @@ class Paginator(disnake.ui.View):
             return True
 
     @staticmethod
-    def paginate_emojis(list_emoji: List[disnake.Emoji], guild: disnake.Guild) -> List[disnake.Embed]:
+    def paginate_emojis(list_emoji: List[disnake.Emoji],
+                        guild: disnake.Guild) -> List[disnake.Embed]:
         collectionstr = list()
         for lists in list_emoji:
-            collectionstr.append(disnake.Embed(
-                title=f"Emojis: {len(guild.emojis)}",
-                description='\n'.join(map(lambda c: f'{c} ➞ `{c}`', lists))
-            ))
+            collectionstr.append(
+                disnake.Embed(
+                    title=f"Emojis: {len(guild.emojis)}",
+                    description='\n'.join(map(lambda c: f'{c} ➞ `{c}`', lists))
+                )
+            )
         return collectionstr
 
     @property

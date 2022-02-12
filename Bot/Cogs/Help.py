@@ -28,6 +28,7 @@ import disnake
 import pytz
 from disnake import Embed
 from disnake.ext import commands
+from disnake.ext.commands import Command
 
 from Aurora import AuroraClass
 from Utils.Database import Database
@@ -50,7 +51,7 @@ class Help(commands.Cog, name=":clipboard: Ajuda"):
         dt = datetime.utcnow().astimezone(pytz.timezone('America/Sao_Paulo')
                                          ).strftime("%d/%m/%Y às %H:%M")
         if command:
-            command = self.bot.get_command(command)
+            command: Command = self.bot.get_command(command)
             if command:
                 if not command.cog_name in [
                     'Integration', 'Jishaku',
