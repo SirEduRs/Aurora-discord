@@ -7,7 +7,6 @@ from disnake.ext.commands import (  # type: ignore
     Context,
     command,
     cooldown,
-    guild_only,
 )
 from humanize import precisedelta
 
@@ -29,7 +28,6 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
         description='Tocar uma música do Youtube ou Spotify',
         usage='play <nome ou link>'
     )
-    @guild_only()
     async def _play(self, ctx: Context[AuroraClass], *, music: str):
         channel = getattr(ctx.author.voice, 'channel', None)  # type: ignore
         if not channel:
@@ -38,10 +36,6 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
             )
 
         if not ctx.voice_client:
-            if ctx.me.voice: # type: ignore
-                return await Embed(
-                    ctx, message="Eu já estou em um canal de voz !"
-                )
             node = self.pomice.get_node(identifier='São Paulo')
             await ctx.author.voice.channel.connect(
                 cls=PlayerMusic(node=node)
@@ -217,6 +211,28 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
             embed.description += f"{i + 1}. **[{track.title}]({track.uri})**\n"
 
         await ctx.send(embed=embed)
+
+    @command(
+        name="loop",
+        aliases=['repetir'],
+        description='Repete a música atual',
+        usage='loop'
+    )
+    async def _loop(self, ctx: Context[AuroraClass]):
+        player: PlayerMusic = ctx.voice_client  # type: ignore
+        if not player.is_playing:
+            return await Embed(ctx, message="Não estou tocando nada !")
+        if not player.current.requester == ctx.author:
+            return await Embed(
+                ctx,
+                message="Você não pode repetir a música que não requisitou !"
+            )
+
+        player.loop = not player.loop
+        await ctx.send(embed=disnake.Embed(  # type: ignore
+            title=":white_check_mark: Loop alterado com sucesso !",
+            description=f"**Loop**: `{'Ativado' if player.loop else 'Desativado'}` na música atual."
+        ))
 
     @command(
         name='skip',

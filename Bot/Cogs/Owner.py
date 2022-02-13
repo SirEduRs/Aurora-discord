@@ -70,7 +70,7 @@ class ComandosOwnerBot(
 
             await ctx.send(embed=disnake.Embed(  # type: ignore
                 colour=disnake.Colour.random(),
-                title="Modules Reloades !",
+                title="Extensions Reloaded !",
                 description=desc))
         else:
             try:

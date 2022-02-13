@@ -46,8 +46,12 @@ class PlayerMusic(PomicePlayer):
         self.context: commands.Context = None  # type: ignore
         self.client: commands.Bot = None  # type: ignore
         self.dj: Member = None  # type: ignore
+        self.loop: bool = False
 
     async def do_next(self) -> None:
+
+        if self.loop:
+            return await self.play(self._ending_track)
 
         # Check if theres a controller still active and deletes it
         if self.controller:

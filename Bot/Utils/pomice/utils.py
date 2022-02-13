@@ -118,7 +118,7 @@ class Ping:
         def stop(self) -> None:
             self._stop = timer()
 
-        def cost(self, funcs: Any, args: Any) -> float:
+        def cost(self, funcs: Any, args: Any) -> Any:
             self.start()
             for func, arg in zip_longest(funcs, args):
                 if arg:
