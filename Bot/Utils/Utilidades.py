@@ -187,7 +187,8 @@ async def get_userinfo(
             dateni, "{days}"
         )  # type: ignore
         dateni = int(dateni)  # type: ignore
-    badges.append("<:nitro:861980521415704607>") if user.premium_since else None
+    if user.premium_since or user.avatar.is_animated():
+        badges.append("<:nitro:861980521415704607>")
     [
         roles.append(re.mention)
         for re in user.roles if not re.name == "@everyone"
@@ -201,24 +202,24 @@ async def get_userinfo(
         disp = "<:web:873574350966648892> Web"
     date = user.created_at.replace(tzinfo=timezone('America/Sao_Paulo'))
     emoji = "<:coroa:784164230005784657>" if user.id == guild.owner_id else ":bust_in_silhouette:"
-    if dateni:
-        if dateni in range(0, 30):
+    match dateni:
+        case num if num in range(0, 59):
             badges.append("<:lvl1:862393142473261066>")
-        elif dateni in range(60, 90):
+        case num if num in range(60, 90):
             badges.append("<:lvl2:862393142548234281>")
-        elif dateni in range(90, 186):
+        case num if num in range(90, 186):
             badges.append("<:lvl3:862393142589128734>")
-        elif dateni in range(186, 279):
+        case num if num in range(186, 279):
             badges.append("<:lvl4:862393142627139585>")
-        elif dateni in range(279, 365):
+        case num if num in range(279, 365):
             badges.append("<:lvl5:862393142828990524>")
-        elif dateni in range(365, 465):
+        case num if num in range(365, 465):
             badges.append("<:lvl6:862393143147495514>")
-        elif dateni in range(465, 558):
+        case num if num in range(465, 558):
             badges.append("<:lvl7:862393143025205258>")
-        elif dateni in range(558, 730):
+        case num if num in range(558, 730):
             badges.append("<:lvl8:862393142678650891>")
-        elif dateni in range(730, 1500):
+        case num if num in range(730, 1500):
             badges.append("<:lvl9:862393142766731265>")
     emojis_dict = {
         "early_supporter":
