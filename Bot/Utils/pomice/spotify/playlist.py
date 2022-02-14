@@ -1,7 +1,6 @@
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 from .track import Track
-
 
 class Playlist:
     """The base class for a Spotify playlist"""

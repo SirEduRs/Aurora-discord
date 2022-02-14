@@ -23,11 +23,8 @@ SOFTWARE.
 """
 
 import asyncio
-from code import interact
 import json
-from os import stat
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, TypeAlias
-from itertools import product
 
 import disnake
 import pytz

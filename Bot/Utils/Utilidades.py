@@ -26,7 +26,7 @@ import os
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
-from typing import (TYPE_CHECKING, Any, List, TypeAlias)
+from typing import TYPE_CHECKING, Any, List, TypeAlias
 
 import disnake
 from disnake.ext import commands
@@ -115,7 +115,10 @@ def pretty(value: Any, htchar: str = '\t', lfchar: str = '\n', indent: int = 0):
         return '(%s)' % (','.join(items) + lfchar + htchar * indent)
     else:
         result = str(value)
-        environments = ['USERM', 'PASSM', 'DISCORD_TOKEN', 'DSN', 'API_HEROKU', 'PASTEBIN_TOKEN', 'PASTEBIN_USER', 'PASTEBIN_PASS']
+        environments = [
+            'USERM', 'PASSM', 'DISCORD_TOKEN', 'DSN', 'API_HEROKU',
+            'PASTEBIN_TOKEN', 'PASTEBIN_USER', 'PASTEBIN_PASS'
+        ]
         for env in environments:
             result = result.replace(os.environ[env], '[CENSURADO]')
         return result
@@ -218,17 +221,28 @@ async def get_userinfo(
         elif dateni in range(730, 1500):
             badges.append("<:lvl9:862393142766731265>")
     emojis_dict = {
-        "early_supporter": "<:earlysupporter:862108857567936552>",
-        "hypesquad": "<:hypersquad:862108857370804255>",
-        "hypesquad_brilliance": "<:brillance:862108857182453790>",
-        "hypesquad_bravery": "<:bravery:862108856586207253>",
-        "hypesquad_balance": "<:balance:862108857626656829>",
-        "bug_hunter": "<:bughunter1:862109772618006569>",
-        "bug_hunter_level_2": "<:bughunter2:862108857660604416>",
-        "discord_certified_moderator": "<:moderatorcertified:862108857187041320>",
-        "partner": "<:partner:862108857539100712>",
-        "staff": "<:dcstaff:862108857223741491>",
-        "verified_bot_developer": "<:devbadge:862108857369886721>",
+        "early_supporter":
+            "<:earlysupporter:862108857567936552>",
+        "hypesquad":
+            "<:hypersquad:862108857370804255>",
+        "hypesquad_brilliance":
+            "<:brillance:862108857182453790>",
+        "hypesquad_bravery":
+            "<:bravery:862108856586207253>",
+        "hypesquad_balance":
+            "<:balance:862108857626656829>",
+        "bug_hunter":
+            "<:bughunter1:862109772618006569>",
+        "bug_hunter_level_2":
+            "<:bughunter2:862108857660604416>",
+        "discord_certified_moderator":
+            "<:moderatorcertified:862108857187041320>",
+        "partner":
+            "<:partner:862108857539100712>",
+        "staff":
+            "<:dcstaff:862108857223741491>",
+        "verified_bot_developer":
+            "<:devbadge:862108857369886721>",
     }
     for badge in user.public_flags.all():
         if badge.name in emojis_dict:
