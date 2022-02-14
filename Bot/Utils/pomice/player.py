@@ -17,7 +17,7 @@ from .pool import Node, NodePool
 if TYPE_CHECKING:
     from Aurora import AuroraClass
 
-    from .events import PomiceEvent
+    from .events import PomiceEvent, TrackEndEvent, TrackStartEvent
     Aurora: TypeAlias = AuroraClass
 
 

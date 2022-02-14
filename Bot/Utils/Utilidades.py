@@ -34,13 +34,8 @@ from pytz import timezone
 
 if TYPE_CHECKING:
     from Aurora import AuroraClass
-
-    from .View import Paginator
-
     Aurora: TypeAlias = AuroraClass
-    ViewPaginator: TypeAlias = Paginator
 else:
-    ViewPaginator: TypeAlias = None
     Aurora: TypeAlias = None
 
 
@@ -119,16 +114,11 @@ def pretty(value: Any, htchar: str = '\t', lfchar: str = '\n', indent: int = 0):
         ]
         return '(%s)' % (','.join(items) + lfchar + htchar * indent)
     else:
-        value = str(value)
-        value = value.replace(os.getenv('USERM'), '[CENSURADO]')
-        value = value.replace(os.getenv('PASSM'), '[CENSURADO]')
-        value = value.replace(os.getenv('DISCORD_TOKEN'), '[CENSURADO]')
-        value = value.replace(os.getenv('DSN'), '[CENSURADO]')
-        value = value.replace(os.getenv('API_HEROKU'), '[CENSURADO]')
-        value = value.replace(os.getenv('PASTEBIN_TOKEN'), '[CENSURADO]')
-        value = value.replace(os.getenv('PASTEBIN_USER'), '[CENSURADO]')
-        value = value.replace(os.getenv('PASTEBIN_PASS'), '[CENSURADO]')
-        return value
+        result = str(value)
+        environments = ['USERM', 'PASSM', 'DISCORD_TOKEN', 'DSN', 'API_HEROKU', 'PASTEBIN_TOKEN', 'PASTEBIN_USER', 'PASTEBIN_PASS']
+        for env in environments:
+            result = result.replace(os.environ[env], '[CENSURADO]')
+        return result
 
 
 def pastebin_post(title: str, content: str):
@@ -227,39 +217,22 @@ async def get_userinfo(
             badges.append("<:lvl8:862393142678650891>")
         elif dateni in range(730, 1500):
             badges.append("<:lvl9:862393142766731265>")
-    badges.append(
-        "<:earlysupporter:862108857567936552>"
-    ) if user.public_flags.early_supporter else None
-    badges.append(
-        "<:hypersquad:862108857370804255>"
-    ) if user.public_flags.hypesquad else None
-    badges.append(
-        "<:brillance:862108857182453790>"
-    ) if user.public_flags.hypesquad_brilliance else None
-    badges.append(
-        "<:bravery:862108856586207253>"
-    ) if user.public_flags.hypesquad_bravery else None
-    badges.append(
-        "<:balance:862108857626656829>"
-    ) if user.public_flags.hypesquad_balance else None
-    badges.append(
-        "<:bughunter1:862109772618006569>"
-    ) if user.public_flags.bug_hunter else None
-    badges.append(
-        "<:bughunter2:862108857660604416>"
-    ) if user.public_flags.bug_hunter_level_2 else None
-    badges.append(
-        "<:moderatorcertified:862108857187041320>"
-    ) if user.public_flags.discord_certified_moderator else None
-    badges.append(
-        "<:partner:862108857539100712>"
-    ) if user.public_flags.partner else None
-    badges.append(
-        "<:dcstaff:862108857223741491>"
-    ) if user.public_flags.staff else None
-    badges.append(
-        "<:devbadge:862108857369886721>"
-    ) if user.public_flags.early_verified_bot_developer else None
+    emojis_dict = {
+        "early_supporter": "<:earlysupporter:862108857567936552>",
+        "hypesquad": "<:hypersquad:862108857370804255>",
+        "hypesquad_brilliance": "<:brillance:862108857182453790>",
+        "hypesquad_bravery": "<:bravery:862108856586207253>",
+        "hypesquad_balance": "<:balance:862108857626656829>",
+        "bug_hunter": "<:bughunter1:862109772618006569>",
+        "bug_hunter_level_2": "<:bughunter2:862108857660604416>",
+        "discord_certified_moderator": "<:moderatorcertified:862108857187041320>",
+        "partner": "<:partner:862108857539100712>",
+        "staff": "<:dcstaff:862108857223741491>",
+        "verified_bot_developer": "<:devbadge:862108857369886721>",
+    }
+    for badge in user.public_flags.all():
+        if badge.name in emojis_dict:
+            badges.append(emojis_dict[badge.name])
     text = await bot.http.get_user(user.id)
     Embed = disnake.Embed(colour=await color(user, guild, bot), timestamp=dt)
     Embed.add_field(name=f"{emoji} Usúario:", value=f"{name}")
@@ -306,10 +279,7 @@ async def get_userinfo(
             text=f"Comando usado por {author.name}",
             icon_url=author.display_avatar
         )
-        v = ViewPaginator([Embed, av, dc], ctx_id=author.id)
-        v.button_current.disabled = True  # type: ignore
-        v.button_last.disabled = True  # type: ignore
-        return Embed, v
+        return [Embed, av, dc]
     else:
         av = disnake.Embed(
             title="Avatar", colour=await color(user, guild, bot), timestamp=dt
@@ -320,10 +290,7 @@ async def get_userinfo(
             text=f"Comando usado por {author.name}",
             icon_url=author.display_avatar
         )
-        v = ViewPaginator([Embed, av], ctx_id=author.id)
-        v.button_current.disabled = True  # type: ignore
-        v.button_last.disabled = True  # type: ignore
-        return Embed, v
+        return [Embed, av]
 
 
 def split_list(list_split: List[Any], n: int) -> List[List[Any]]:

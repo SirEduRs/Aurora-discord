@@ -13,8 +13,6 @@ RUN apt-get update; \
 
 WORKDIR /bot/
 
-RUN useradd -m -s /bin/bash aurora;
-
 COPY ./poetry.lock ./pyproject.toml /bot/
 
 RUN poetry install && poetry update;

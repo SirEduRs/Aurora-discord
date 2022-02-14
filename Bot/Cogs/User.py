@@ -26,6 +26,7 @@ import disnake
 from disnake.ext import commands
 
 from Aurora import AuroraClass
+from Utils import Paginator
 from Utils.Utilidades import get_userinfo
 
 
@@ -165,10 +166,13 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         user: disnake.Member = None
     ):
         user = user or ctx.author
-        message = await get_userinfo(
+        list_embeds = await get_userinfo(
             user_id=user.id, author=ctx.author, guild=ctx.guild, bot=self.bot
         )
-        await ctx.send(embed=message[0], view=message[1])
+        View = Paginator(list_embeds, ctx.author.id)
+        View.button_current.disabled = True
+        View.button_last.disabled = True
+        await ctx.send(embed=list_embeds[0], view=View)
 
 
 def setup(bot: AuroraClass):
