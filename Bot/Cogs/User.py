@@ -28,7 +28,7 @@ from PIL.ImageColor import getcolor
 
 from Aurora import AuroraClass
 from Utils import Paginator
-from Utils.Utilidades import get_userinfo, draw_color
+from Utils.Utilidades import draw_color, get_userinfo
 
 
 class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
@@ -108,7 +108,8 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         member = member or ctx.author
         banner = (await self.bot.fetch_user(member.id)).banner
         if banner is None:
-            banner_color = (await self.bot.http.get_user(member.id))["banner_color"]
+            banner_color = (await
+                            self.bot.http.get_user(member.id))["banner_color"]
             if member == ctx.author:
                 txt = "Seu banner:"
             else:
