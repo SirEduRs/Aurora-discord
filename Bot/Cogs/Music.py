@@ -18,6 +18,14 @@ from Utils.Utilidades import EmbedDefault as Embed
 
 
 class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
+    """
+    Classe de comandos da categoria: Música.
+
+    Parameters:
+    -----------
+    
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: AuroraClass):
         self.bot = bot
         self.pomice = bot.pomice

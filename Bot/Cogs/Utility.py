@@ -33,7 +33,14 @@ from Utils.Utilidades import split_list
 
 
 class UtilityCog(commands.Cog, name=":toolbox: Utilidades"):  # type: ignore
-    """docstring for Utility"""
+    """
+    Classe de comandos da categoria: Utilidades.
+
+    Parameters:
+    -----------
+    
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: commands.Bot):
         super(UtilityCog, self).__init__()
         self.bot = bot

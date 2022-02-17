@@ -35,7 +35,14 @@ from Utils.Utilidades import convert_time
 
 
 class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
-    """docstring for Admin"""
+    """
+    Classe de comandos da categoria: Administração.
+    
+    Parameters:
+    -----------
+
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot):
         super(Admin, self).__init__()
         self.bot = bot

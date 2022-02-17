@@ -36,7 +36,6 @@ from Utils.Utilidades import permissions
 
 
 class Errors(commands.Cog):
-    """docstring for Errors"""
     def __init__(self, bot: AuroraClass):
         super(Errors, self).__init__()
         self.bot = bot

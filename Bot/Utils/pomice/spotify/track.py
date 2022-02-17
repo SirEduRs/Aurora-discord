@@ -1,5 +1,6 @@
 from typing import Any, Dict
 
+
 class Track:
     """The base class for a Spotify Track"""
     def __init__(self, data: Dict[Any, Any], image: Any = None) -> None:

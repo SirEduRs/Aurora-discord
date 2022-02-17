@@ -31,7 +31,14 @@ from Utils.Utilidades import get_userinfo
 
 
 class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
-    """docstring for Usúario"""
+    """
+    Classe de comandos da categoria: Usuário.
+
+    Parameters:
+    -----------
+    
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: commands.Bot):
         super(User, self).__init__()
         self.bot = bot

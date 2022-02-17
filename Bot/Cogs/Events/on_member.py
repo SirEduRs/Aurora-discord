@@ -30,7 +30,6 @@ from Utils.Utilidades import formatdelta
 
 
 class On_MemberEvents(commands.Cog):
-    """docstring for On_MemberEvents"""
     def __init__(self, bot: AuroraClass):
         super(On_MemberEvents, self).__init__()
         self.bot = bot

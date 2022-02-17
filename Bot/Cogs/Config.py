@@ -30,6 +30,14 @@ from Utils import Database, SelectLogs, ViewSimple
 
 
 class Config(commands.Cog, name=":gear: Configuração"):  # type: ignore
+    """
+    Classe de comandos da categoria: Configuração.
+
+    Parameters:
+    -----------
+
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: AuroraClass):
         self.bot = bot
 

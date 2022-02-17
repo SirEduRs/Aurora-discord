@@ -2,6 +2,7 @@ from typing import Any, Dict
 
 from .track import Track
 
+
 class Album:
     """The base class for a Spotify album"""
     def __init__(self, data: Dict[str, Any]) -> None:

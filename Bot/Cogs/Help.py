@@ -35,6 +35,14 @@ from Utils.Database import Database
 
 
 class Help(commands.Cog, name=":clipboard: Ajuda"):
+    """
+    Classe de comandos da categoria: Ajuda.
+
+    Parameters:
+    -----------
+    
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: commands.Bot):
         self.bot = bot
 

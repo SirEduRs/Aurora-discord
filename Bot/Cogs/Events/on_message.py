@@ -35,7 +35,6 @@ from Utils.Utilidades import pastebin_post
 
 
 class On_MessageEvents(commands.Cog):
-    """docstring for On_MessageEvent"""
     def __init__(self, bot: AuroraClass):
         super(On_MessageEvents, self).__init__()
         self.bot = bot

@@ -42,7 +42,14 @@ i18n.activate("pt_BR")  # type: ignore
 
 
 class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
-    """docstring for InformationCommands"""
+    """
+    Classe de comandos da categoria: Informações.
+
+    Parameters:
+    -----------
+    
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: AuroraClass):
         super(Info, self).__init__()
         self.bot = bot

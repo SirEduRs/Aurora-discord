@@ -39,6 +39,14 @@ from Utils.Utilidades import pretty
 class ComandosOwnerBot(
     commands.Cog, name="<:coroa:784164230005784657> Developer"
 ):  # type: ignore
+    """
+    Classe de comandos da categoria: Developer.
+
+    Parameters:
+    -----------
+    
+    bot (AuroraClass): Classe principal do bot.
+    """
     def __init__(self, bot: AuroraClass):
         super(ComandosOwnerBot, self).__init__()
         self.bot = bot
