@@ -26,14 +26,11 @@ import os
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, List, Tuple, TypeAlias
+from typing import TYPE_CHECKING, Any, List, TypeAlias
 
 import disnake
 from disnake.ext import commands
 from pytz import timezone
-from PIL import Image, ImageDraw
-from PIL.ImageColor import getcolor
-from io import BytesIO
 
 if TYPE_CHECKING:
     from Aurora import AuroraClass
@@ -279,27 +276,36 @@ async def get_userinfo(
     Embed.set_footer(
         text=f"Comando usado por {author.name}", icon_url=author.display_avatar
     )
-    av = disnake.Embed(
-        title="Avatar", colour=await color(user, guild, bot), timestamp=dt
-    )
-    dc = disnake.Embed(
-        title="Banner", colour=await color(user, guild, bot), timestamp=dt
-    )
-    met = (await bot.fetch_user(user.id)).banner or draw_color(getcolor(text["banner_color"]))
-    if isinstance(met, disnake.File):
-        dc.set_image(file=met)
-    else:
+    if text["banner"]:  # type: ignore
+        av = disnake.Embed(
+            title="Avatar", colour=await color(user, guild, bot), timestamp=dt
+        )
+        dc = disnake.Embed(
+            title="Banner", colour=await color(user, guild, bot), timestamp=dt
+        )
+        met = (await bot.fetch_user(user.id)).banner
         dc.set_image(url=met)
-    av.set_image(url=user.display_avatar)
-    dc.set_footer(
-        text=f"Comando usado por {author.name}",
-        icon_url=author.display_avatar
-    )
-    av.set_footer(
-        text=f"Comando usado por {author.name}",
-        icon_url=author.display_avatar
-    )
-    return [Embed, av, dc]
+        av.set_image(url=user.display_avatar)
+        dc.set_footer(
+            text=f"Comando usado por {author.name}",
+            icon_url=author.display_avatar
+        )
+        av.set_footer(
+            text=f"Comando usado por {author.name}",
+            icon_url=author.display_avatar
+        )
+        return [Embed, av, dc]
+    else:
+        av = disnake.Embed(
+            title="Avatar", colour=await color(user, guild, bot), timestamp=dt
+        )
+
+        av.set_image(url=user.display_avatar)
+        av.set_footer(
+            text=f"Comando usado por {author.name}",
+            icon_url=author.display_avatar
+        )
+        return [Embed, av]
 
 
 def split_list(list_split: List[Any], n: int) -> List[List[Any]]:
@@ -353,16 +359,8 @@ def permissions(permission: str):
         "view_channel": "ver chat",
         "use_threads": "usar threads",
         "use_private_threads": "usar threads privadas",
+        "create_public_threads": "Criar threads públicas",
+        "create_private_threads": "Criar threads privadas",
         "view_guild_insights": "ver análises do servidor"
     }
     return Permissions[permission]
-
-
-def draw_color(color: Tuple[int]):
-    image = Image.new('RGB', (200, 500), color)
-    image = image.rotate(90)
-    ImageDraw.Draw(image)
-    with BytesIO() as imagebuffer:
-        image.save(imagebuffer, 'PNG')
-        imagebuffer.seek(0)
-        return disnake.File(fp=imagebuffer, filename='banner_color.png')
