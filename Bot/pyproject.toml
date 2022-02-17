@@ -17,14 +17,15 @@ tabulate = "0.8.7"
 firebase_admin = "5.1.0"
 "stopwatch.py" = "^1.0.1"
 humanize = "^3.13.1"
-disnake = {git = "https://github.com/DisnakeDev/disnake.git", rev = "master"}
 paramiko = "^2.9.1"
 Pillow = "^9.0.0"
 toml = "^0.10.2"
+disnake = "^2.4.0"
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
 yapf = "^0.32.0"
+isort = "^5.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
@@ -35,7 +36,6 @@ profile = "black"
 py_version = "310"
 
 [tool.mypy]
-python_version = "3.10"
 namespace_packages = "True"
 
 [tool.yapf]
