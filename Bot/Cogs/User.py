@@ -24,10 +24,11 @@ SOFTWARE.
 
 import disnake
 from disnake.ext import commands
+from PIL.ImageColor import getcolor
 
 from Aurora import AuroraClass
 from Utils import Paginator
-from Utils.Utilidades import get_userinfo
+from Utils.Utilidades import get_userinfo, draw_color
 
 
 class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
@@ -104,60 +105,43 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         member: disnake.Member | disnake.User = None
     ):
         dt = disnake.utils.utcnow()
-        if member is not None:
-            member = member or ctx.author
-            banner = (await self.bot.fetch_user(member.id)).banner
-            if banner is None:
-                if member == ctx.author:
-                    txt = "Você não possui um banner."
-                else:
-                    txt = "Esse membro não possui um banner."
-                Embeder = disnake.Embed(
-                    title=txt, colour=disnake.Colour.random(), timestamp=dt
-                )
-                return await ctx.send(embed=Embeder)  # type: ignore
+        member = member or ctx.author
+        banner = (await self.bot.fetch_user(member.id)).banner
+        if banner is None:
+            banner_color = (await self.bot.http.get_user(member.id))["banner_color"]
             if member == ctx.author:
-                Embeder = disnake.Embed(
-                    title="Seu banner:",
-                    colour=disnake.Colour.random(),
-                    timestamp=dt
-                )
-                Embeder.set_image(url=banner)
-                Embeder.set_footer(
-                    text=f"Comando usado por {ctx.author.name}",
-                    icon_url=ctx.author.avatar.url
-                )
-                return await ctx.send(embed=Embeder)  # type: ignore
+                txt = "Seu banner:"
             else:
-                Embeder = disnake.Embed(
-                    title=f"Banner de {member}",
-                    colour=disnake.Colour.random(),
-                    timestamp=dt
-                )
-                Embeder.set_image(url=banner)
-                Embeder.set_footer(
-                    text=f"Comando usado por {ctx.author.name}",
-                    icon_url=ctx.author.avatar.url
-                )
-                return await ctx.send(embed=Embeder)  # type: ignore
+                txt = f"Banner de {member}"
+            Embeder = disnake.Embed(
+                title=txt, colour=disnake.Colour.random(), timestamp=dt
+            )
+            Embeder.set_image(file=draw_color(getcolor(banner_color, "RGB")))
+            return await ctx.send(embed=Embeder)  # type: ignore
+        if member == ctx.author:
+            Embeder = disnake.Embed(
+                title="Seu banner:",
+                colour=disnake.Colour.random(),
+                timestamp=dt
+            )
+            Embeder.set_image(url=banner)
+            Embeder.set_footer(
+                text=f"Comando usado por {ctx.author.name}",
+                icon_url=ctx.author.avatar.url
+            )
+            return await ctx.send(embed=Embeder)  # type: ignore
         else:
-            banner = (await self.bot.fetch_user(ctx.author.id)).banner
-            if banner is None:
-                txt = "Você não possui um banner."
-                return await ctx.send(
-                    embed=disnake.Embed(
-                        title=txt, colour=disnake.Colour.random(), timestamp=dt
-                    )
-                )  # type: ignore
-            else:
-                Embeder = disnake.Embed(
-                    title="Seu banner:", colour=0x0101DF, timestamp=dt
-                )
-                Embeder.set_image(url=banner)
-                Embeder.set_footer(
-                    text=f"Comando usado por {ctx.author.name}",
-                    icon_url=ctx.author.display_avatar
-                )
+            Embeder = disnake.Embed(
+                title=f"Banner de {member}",
+                colour=disnake.Colour.random(),
+                timestamp=dt
+            )
+            Embeder.set_image(url=banner)
+            Embeder.set_footer(
+                text=f"Comando usado por {ctx.author.name}",
+                icon_url=ctx.author.avatar.url
+            )
+            return await ctx.send(embed=Embeder)  # type: ignore
 
     @commands.command(
         description="Mostra as informações do usúario.",

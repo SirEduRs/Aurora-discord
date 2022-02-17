@@ -26,11 +26,13 @@ import os
 import urllib.parse
 import urllib.request
 from datetime import datetime, timedelta
-from typing import TYPE_CHECKING, Any, List, TypeAlias
+from typing import TYPE_CHECKING, Any, List, TypeAlias, Tuple
+from io import BytesIO
 
 import disnake
 from disnake.ext import commands
 from pytz import timezone
+from PIL import Image, ImageDraw
 
 if TYPE_CHECKING:
     from Aurora import AuroraClass
@@ -364,3 +366,11 @@ def permissions(permission: str):
         "view_guild_insights": "ver análises do servidor"
     }
     return Permissions[permission]
+
+def draw_color(color: Tuple[int]):
+    image = Image.new('RGB', (500, 200), color)
+    ImageDraw.Draw(image)
+    with BytesIO() as imagebuffer:
+        image.save(imagebuffer, 'PNG')
+        imagebuffer.seek(0)
+        return disnake.File(fp=imagebuffer, filename='banner_color.png')
