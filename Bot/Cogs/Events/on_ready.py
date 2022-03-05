@@ -38,7 +38,7 @@ class On_ReadyEvent(commands.Cog):
     async def on_ready(self):
         await self.bot.pomice.create_node(
             bot=self.bot,
-            host='168.138.69.116',
+            host='lavalink-canada',
             port='2333',
             password=environ['LAVALINK_PASS'],
             identifier='Canada'
