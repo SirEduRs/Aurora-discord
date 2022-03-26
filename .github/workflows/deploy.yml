@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Copy repository contents via scp
+    - name: Copy repository to vps
       uses: appleboy/scp-action@master
       env:
         HOST: ${{ secrets.HOST }}
