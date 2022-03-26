@@ -19,7 +19,7 @@ jobs:
         KEY: ${{ secrets.KEYSSH }}
       with:
         source: "."
-        target: "/home/${{ secrets.KEYSSH }}/aurora"
+        target: "/home/${{ secrets.USERNAME }}/aurora"
 
     - name: Executing remote command
       uses: appleboy/ssh-action@master
