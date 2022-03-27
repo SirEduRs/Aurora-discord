@@ -13,7 +13,7 @@ RUN apt-get update; \
 
 WORKDIR /bot/
 
-COPY ./poetry.lock ./pyproject.toml /bot/
+COPY ./pyproject.toml /bot/
 
 RUN poetry install;
 

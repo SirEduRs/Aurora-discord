@@ -6,6 +6,8 @@ Bot/Cogs/MTA.py
 Bot/Cogs/Tasks.py
 Bot/Utils/Archives
 
+poetry.lock
+
 # mypy
 .mypy_cache/
 .dmypy.json
