@@ -5,7 +5,7 @@ networks:
 
 services:
   database:
-    image: postgres:14.1
+    image: postgres:14.2
     networks:
       - aurorabot
     volumes:
@@ -24,7 +24,6 @@ services:
       - database
     env_file:
       - .env
-    platform: linux/x86_64
     build:
       context: ./Bot/
       dockerfile: Dockerfile
