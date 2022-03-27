@@ -15,7 +15,7 @@ WORKDIR /bot/
 
 COPY ./poetry.lock ./pyproject.toml /bot/
 
-RUN poetry install && poetry update;
+RUN poetry install;
 
 COPY . .
 
