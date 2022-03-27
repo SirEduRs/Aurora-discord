@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils.Utilidades import formatdelta
@@ -47,8 +47,8 @@ class On_MemberEvents(commands.Cog):
             if date < 10:
                 try:
                     await member.send(
-                        embed=disnake.Embed(
-                            colour=disnake.Colour.random(),
+                        embed=discord.Embed(
+                            colour=discord.Colour.random(),
                             description=
                             f"Você foi kickado do servidor por: Anti-Fake System | Conta criada em {dater}"
                         )
@@ -60,7 +60,7 @@ class On_MemberEvents(commands.Cog):
                     reason=f"Anti-Fake System | Conta criada em {dater}"
                 )
             try:
-                cargo = disnake.utils.get(
+                cargo = discord.utils.get(
                     member.guild.roles, id=838901535345868831
                 )
                 await member.add_roles(cargo)
@@ -68,5 +68,5 @@ class On_MemberEvents(commands.Cog):
                 print(e)
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(On_MemberEvents(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(On_MemberEvents(bot))

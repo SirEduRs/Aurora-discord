@@ -25,9 +25,9 @@ SOFTWARE.
 import secrets
 from datetime import datetime
 
-import disnake
+import discord
 import pytz
-from disnake.ext import commands
+from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils import Database
@@ -40,13 +40,13 @@ class On_MessageEvents(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_message(self, message: disnake.Message):
+    async def on_message(self, message: discord.Message):
         if (f'<@{self.bot.user.id}>' == message.content
            ) or (f'<@!{self.bot.user.id}>' == message.content):
             db = Database(self.bot)
             getprefix = await db.get_prefix(message)
-            embed = disnake.Embed(
-                colour=disnake.Colour.random(),
+            embed = discord.Embed(
+                colour=discord.Colour.random(),
                 description=
                 f"Olá {message.author.mention} !\nMeu prefixo nesse servidor é: `{getprefix}`."
             )
@@ -57,7 +57,7 @@ class On_MessageEvents(commands.Cog):
             await message.channel.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_message_delete(self, message: disnake.Message):
+    async def on_message_delete(self, message: discord.Message):
         db = Database(self.bot)
         log = await db.get_log(message.guild.id, "message_log")
         getprefix = await db.get_prefix(message)
@@ -69,13 +69,13 @@ class On_MessageEvents(commands.Cog):
                     if not message.channel.id in [
                         819586447627255878, 760914893762461756
                     ]:
-                        Embed = disnake.Embed(
+                        Embed = discord.Embed(
                             title="Mensagem deletada !",
                             description=
                             f"**Autor**: {message.author} ({message.author.id})\n"
                             f"**Canal**: {message.channel.mention} ({message.channel.id})\n"
                             f"**Mensagem**: \n```{message.content}```\n",
-                            colour=disnake.Colour.random()
+                            colour=discord.Colour.random()
                         )
                         Embed.set_thumbnail(url=message.author.avatar.url)
                         Embed.set_footer(
@@ -101,11 +101,11 @@ class On_MessageEvents(commands.Cog):
                     text += f"[{dt}] {message.author}: {message.content}\n"
             a = secrets.token_urlsafe(4)
             b = pastebin_post(f"{messages[0].guild.name} - {a}", text)
-            Embed = disnake.Embed(
+            Embed = discord.Embed(
                 title="Mensagens deletadas !",
                 description=f"**Canal**: {messages[0].channel.mention}\n"
                 f"Link para as mensagens [aqui]({b.decode('utf-8')}).",
-                colour=disnake.Colour.random()
+                colour=discord.Colour.random()
             )
             dt = datetime.utcnow().astimezone(
                 pytz.timezone('America/Sao_Paulo')
@@ -127,14 +127,14 @@ class On_MessageEvents(commands.Cog):
         if log:
             if before.author.bot is False:
                 if before.content != after.content:
-                    Embed = disnake.Embed(
+                    Embed = discord.Embed(
                         title="Mensagem editada !",
                         description=
                         f"**Autor**: {after.author} ({after.author.id})\n"
                         f"**Canal**: {after.channel.mention} ({after.channel.id})\n"
                         f"**Mensagem Antiga**: \n```{before.content}```\n"
                         f"**Mensagem Atual**: \n```{after.content}```\n",
-                        colour=disnake.Colour.random()
+                        colour=discord.Colour.random()
                     )
                     Embed.set_thumbnail(url=after.author.avatar.url)
                     Embed.set_footer(
@@ -145,8 +145,8 @@ class On_MessageEvents(commands.Cog):
                     await log.send(embed=Embed)
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(On_MessageEvents(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(On_MessageEvents(bot))
     print(
         "\033[1;95m[Events Load]\033[1;94m Message Event\033[1;96m carregado com sucesso !"
     )

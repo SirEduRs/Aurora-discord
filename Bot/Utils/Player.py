@@ -27,8 +27,8 @@ from contextlib import suppress
 from datetime import timedelta
 from typing import Any
 
-from disnake import Colour, Embed, HTTPException, Member, Message
-from disnake.ext import commands
+from discord import Colour, Embed, HTTPException, Member, Message
+from discord.ext import commands
 from humanize import precisedelta
 
 from .pomice import Track

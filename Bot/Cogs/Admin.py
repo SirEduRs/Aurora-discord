@@ -25,8 +25,8 @@ SOFTWARE.
 from datetime import timedelta
 from typing import Any
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils import ViewerAdmin
@@ -59,7 +59,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     async def _ban(
         self,
         ctx: commands.Context[AuroraClass],
-        userb: disnake.Member = None,
+        userb: discord.Member = None,
         *,
         reason: str = None
     ):
@@ -73,7 +73,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
                 )
             else:
                 await ctx.send(
-                    embed=disnake.Embed(
+                    embed=discord.Embed(
                         colour=0x0101DF,
                         description=
                         f"Você tem certeza que deseja banir o membro {userb.mention} ?"
@@ -101,7 +101,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     async def _kick(
         self,
         ctx: commands.Context[AuroraClass],
-        userk: disnake.Member = None,
+        userk: discord.Member = None,
         *,
         reason: str = None
     ):
@@ -115,7 +115,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
                 )
             else:
                 await ctx.send(
-                    embed=disnake.Embed(
+                    embed=discord.Embed(
                         colour=0x0101DF,
                         description=
                         f"Você tem certeza que deseja expulsar o membro {userk.mention} ?"
@@ -143,14 +143,14 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     async def _unban(
         self,
         ctx: commands.Context[AuroraClass],
-        useru: disnake.User = None,
+        useru: discord.User = None,
         *,
         reason: str = None
     ):
         reason = reason or "Nenhum motivo especificado."
         if useru is not None:
             await ctx.send(
-                embed=disnake.Embed(
+                embed=discord.Embed(
                     colour=0x0101DF,
                     description=
                     f"Você tem certeza que deseja desbanir o membro {useru.user.mention} ?"
@@ -178,7 +178,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     async def _lock(
         self,
         ctx: commands.Context[AuroraClass],
-        channel: disnake.TextChannel = None
+        channel: discord.TextChannel = None
     ):
         channel = channel or ctx.channel
         txt = "Este canal foi bloqueado." if channel == ctx.channel else f"O canal {channel.mention} foi bloqueado."
@@ -199,7 +199,7 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     @commands.guild_only()
     @commands.has_guild_permissions(manage_channels=True)
     @commands.bot_has_guild_permissions(manage_channels=True)
-    async def _unlock(self, ctx, channel: disnake.TextChannel = None):
+    async def _unlock(self, ctx, channel: discord.TextChannel = None):
         channel = channel or ctx.channel
         txt = "Este canal foi desbloqueado." if channel == ctx.channel else f"O canal {channel.mention} foi desbloqueado."
         everyone_perms = channel.overwrites_for(ctx.guild.default_role)
@@ -216,8 +216,8 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     @commands.guild_only()
     async def mute(
         self,
-        inter: disnake.ApplicationCommandInteraction,
-        member: disnake.Member,
+        inter: discord.ApplicationCommandInteraction,
+        member: discord.Member,
         time: Any = "Máximo",
         reason: str = None
     ):
@@ -276,8 +276,8 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
     @commands.guild_only()
     async def unmute(
         self,
-        inter: disnake.ApplicationCommandInteraction,
-        member: disnake.Member,
+        inter: discord.ApplicationCommandInteraction,
+        member: discord.Member,
         reason: str = None
     ):
         """Desmuta um membro.
@@ -319,8 +319,8 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
         )
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(Admin(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(Admin(bot))
     print(
         "\033[1;92m[Cog Load]\033[1;94m Admin\033[1;96m carregado com sucesso !"
     )

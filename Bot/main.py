@@ -22,8 +22,19 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
+import asyncio
+from os import environ
+
 from Aurora import AuroraClass
 
+bot = AuroraClass()
+
+
+async def main():
+    async with bot:
+        await bot.load_cogs()
+        await bot.start(environ['DISCORD_TOKEN'])
+
+
 if __name__ == '__main__':
-    bot = AuroraClass()
-    bot.loop.run_until_complete(bot.run_bot())
+    asyncio.run(main())

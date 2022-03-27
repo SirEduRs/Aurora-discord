@@ -4,11 +4,7 @@ Bot/Utils/ConnectionMTA.py
 Bot/Utils/Heroku.py
 Bot/Cogs/MTA.py
 Bot/Cogs/Tasks.py
-Bot/Utils/Archives/
-
-
-#poetry
-poetry.lock
+Bot/Utils/Archives
 
 # mypy
 .mypy_cache/

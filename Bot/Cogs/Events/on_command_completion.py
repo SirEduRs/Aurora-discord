@@ -22,7 +22,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from disnake.ext import commands
+from discord.ext import commands
 
 from Aurora import AuroraClass
 
@@ -38,8 +38,8 @@ class On_Command_Complete(commands.Cog):
         await self.bot.fdb.set_data("bot", "commands", commandsbot)
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(On_Command_Complete(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(On_Command_Complete(bot))
     print(
         "\033[1;95m[Events Load]\033[1;94m On Command Complete\033[1;96m carregado com sucesso !"
     )

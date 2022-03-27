@@ -24,8 +24,8 @@ SOFTWARE.
 
 from os import environ
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 
 from Aurora import AuroraClass
 
@@ -36,20 +36,13 @@ class On_ReadyEvent(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.pomice.create_node(
+        """await self.bot.pomice.create_node(
             bot=self.bot,
-            host='lavalink-canada',
-            port='2333',
-            password=environ['LAVALINK_PASS'],
-            identifier='Canada'
-        )
-        await self.bot.pomice.create_node(
-            bot=self.bot,
-            host='150.230.94.5',
+            host=environ['LAVALINK_IP'],
             port='2333',
             password=environ['LAVALINK_PASS'],
             identifier='São Paulo'
-        )
+        )"""
         await self.bot.pool.execute(
             "CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, account text UNIQUE);"
         )
@@ -70,19 +63,19 @@ class On_ReadyEvent(commands.Cog):
         )
         print(
             f"\033[m▍\033[1;95mServidores: \033[1;96m{str(len(self.bot.guilds))}                          \033[m▍"
-        )  #str(owner).rjust(50)
+        )
         print(
             f"\033[m▍\033[1;95mUsuários: \033[1;96m{str(users)}                         \033[m▍"
         )
         print(f"\033[m{('▬▬' * 20)}")
         await self.bot.change_presence(
-            status=disnake.Status.dnd,
-            activity=disnake.Game(name="Evoluindo sempre !")
+            status=discord.Status.dnd,
+            activity=discord.Game(name="Evoluindo sempre !")
         )
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(On_ReadyEvent(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(On_ReadyEvent(bot))
     print(
         "\033[1;95m[Events Load]\033[1;94m On Ready\033[1;96m carregado com sucesso !"
     )

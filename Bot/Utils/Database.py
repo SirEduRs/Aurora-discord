@@ -28,8 +28,8 @@ import secrets
 from typing import Any, List, Optional
 
 import asyncpg
-import disnake
-from disnake.ext.commands import Bot
+import discord
+from discord.ext.commands import Bot
 from firebase_admin import firestore
 
 
@@ -85,7 +85,7 @@ class Database:
                 f"UPDATE guilds SET prefix = '{prefix}' WHERE guild_id = {serverid}"
             )
 
-    async def get_prefix(self, message: disnake.Message) -> str:
+    async def get_prefix(self, message: discord.Message) -> str:
         async with self.bot.pool.acquire() as connection:
             server, prefixo = None, None
             if message.guild:
@@ -170,21 +170,21 @@ class Database:
 
     async def create_vip(
         self, account: str, vip: str, duration: str
-    ) -> disnake.Message:
+    ) -> discord.Message:
         async with self.bot.pool.acquire() as connection:
-            date = disnake.utils.format_dt(duration, "f")
+            date = discord.utils.format_dt(duration, "f")
             duration = str(duration)
             await connection.execute(
                 f"INSERT INTO vips(account, vip, duration) VALUES ($1, $2, $3)",
                 account, vip, duration
             )
             channel = await self.bot.fetch_channel(909397032672837662)
-            embed = disnake.Embed(
+            embed = discord.Embed(
                 title="VIP CREATED",
                 description=f"Conta: **`{account}`**\n"
                 f"Vip: **`{vip}`**\n"
                 f"Data de termino: {date}",
-                color=disnake.Color.green()
+                color=discord.Color.green()
             )
             return await channel.send(embed=embed)
 
@@ -192,7 +192,7 @@ class Database:
         async with self.bot.pool.acquire() as connection:
             return await connection.fetch("SELECT * FROM vips")
 
-    async def remove_vip(self, account: str, vip: str) -> disnake.Message:
+    async def remove_vip(self, account: str, vip: str) -> discord.Message:
         async with self.bot.pool.acquire() as connection:
             vipa = await connection.fetch(
                 "SELECT vip FROM vips WHERE account = $1 AND vip = $2;",
@@ -203,10 +203,10 @@ class Database:
                 vip
             )
             channel = await self.bot.fetch_channel(909397032672837662)
-            embed = disnake.Embed(
+            embed = discord.Embed(
                 title="VIP REMOVED",
                 description=f"Conta: **`{account}`**\nVip: **`{vipa[0][0]}`**",
-                color=disnake.Color.red()
+                color=discord.Color.red()
             )
             return await channel.send(embed=embed)
 

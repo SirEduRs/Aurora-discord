@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils import Database, SelectLogs, ViewSimple
@@ -52,15 +52,15 @@ class Config(commands.Cog, name=":gear: Configuração"):  # type: ignore
         db = Database(self.bot)
         await db.update_prefix(ctx.guild.id, prefixnew)
         if prefixnew != "a.":
-            a = disnake.Embed(
+            a = discord.Embed(
                 description=f"Prefixo alterado !\nNovo prefixo: {prefixnew}",
-                colour=disnake.Colour.random()
+                colour=discord.Colour.random()
             )
             await ctx.send(embed=a)
         else:
-            ab = disnake.Embed(
+            ab = discord.Embed(
                 description=f"Prefixo resetado !\nPrefixo: `{prefixnew}`",
-                colour=disnake.Colour.random()
+                colour=discord.Colour.random()
             )
             await ctx.send(embed=ab)
 
@@ -69,14 +69,14 @@ class Config(commands.Cog, name=":gear: Configuração"):  # type: ignore
     async def config(self, ctx):
         if ctx.author.id != self.bot.owner_id:
             return await ctx.send(
-                embed=disnake.Embed(
-                    colour=disnake.Colour.random(),
+                embed=discord.Embed(
+                    colour=discord.Colour.random(),
                     description="Comando em manutenção !!"
                 )
             )
         db = Database(self.bot)
-        Embed = disnake.Embed(
-            title="Configurações dos logs", colour=disnake.Colour.random()
+        Embed = discord.Embed(
+            title="Configurações dos logs", colour=discord.Colour.random()
         )
         mes, meb, mod = None, None, None
         Logs = {"name": [], "log": []}
@@ -98,8 +98,8 @@ class Config(commands.Cog, name=":gear: Configuração"):  # type: ignore
         await ctx.send(embed=Embed, view=View)
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(Config(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(Config(bot))
     print(
         "\033[1;92m[Cog Load]\033[1;94m Config\033[1;96m carregado com sucesso !"
     )

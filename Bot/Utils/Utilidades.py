@@ -29,8 +29,8 @@ from datetime import datetime, timedelta
 from io import BytesIO
 from typing import TYPE_CHECKING, Any, List, Tuple, TypeAlias
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 from PIL import Image, ImageDraw
 from pytz import timezone
 
@@ -70,18 +70,18 @@ class Object:
 
 
 async def EmbedDefault(
-    sender: commands.Context[Aurora] | disnake.ApplicationCommandInteraction,
+    sender: commands.Context[Aurora] | discord.Interaction,
     message: str,
     ephemeral: bool = False
 ):
-    if isinstance(sender, disnake.ApplicationCommandInteraction):
+    if isinstance(sender, discord.Interaction):
         return await sender.response.send_message(  # type: ignore
-            embed=disnake.Embed(colour=disnake.Colour.random(),
+            embed=discord.Embed(colour=discord.Colour.random(),
                                 description=message),
             ephemeral=ephemeral)
     else:
-        return await sender.send(embed=disnake.Embed(  # type: ignore
-            colour=disnake.Colour.random(),
+        return await sender.send(embed=discord.Embed(  # type: ignore
+            colour=discord.Colour.random(),
             description=message,
         ))
 
@@ -157,7 +157,7 @@ def pastebin_post(title: str, content: str):
 
 
 async def color(
-    user: disnake.Member | disnake.User, guild: disnake.Guild, bot: commands.Bot
+    user: discord.Member | discord.User, guild: discord.Guild, bot: commands.Bot
 ):
     text = await bot.http.get_user(user.id)
     if text["banner_color"]:  # type: ignore
@@ -165,18 +165,18 @@ async def color(
     elif guild:
         return user.colour
     else:
-        return disnake.Colour.random()
+        return discord.Colour.random()
 
 
 async def get_userinfo(
-    user_id: int, author: disnake.Member, guild: disnake.Guild,
+    user_id: int, author: discord.Member, guild: discord.Guild,
     bot: commands.Bot
 ):
     user = await guild.fetch_member(user_id)
     name, daten, disp = None, None, None
     badges: List[str] = []
     roles: List[str] = []
-    dateni, dt = None, disnake.utils.utcnow()
+    dateni, dt = None, discord.utils.utcnow()
     name = user.nick if user.nick else user.name
     if user.joined_at:
         daten = user.joined_at.replace(tzinfo=timezone('America/Sao_Paulo'))
@@ -251,7 +251,7 @@ async def get_userinfo(
         if badge.name in emojis_dict:
             badges.append(emojis_dict[badge.name])
     text = await bot.http.get_user(user.id)
-    Embed = disnake.Embed(colour=await color(user, guild, bot), timestamp=dt)
+    Embed = discord.Embed(colour=await color(user, guild, bot), timestamp=dt)
     Embed.add_field(name=f"{emoji} Usúario:", value=f"{name}")
     if badges:
         Embed.add_field(
@@ -279,10 +279,10 @@ async def get_userinfo(
         text=f"Comando usado por {author.name}", icon_url=author.display_avatar
     )
     if text["banner"]:  # type: ignore
-        av = disnake.Embed(
+        av = discord.Embed(
             title="Avatar", colour=await color(user, guild, bot), timestamp=dt
         )
-        dc = disnake.Embed(
+        dc = discord.Embed(
             title="Banner", colour=await color(user, guild, bot), timestamp=dt
         )
         met = (await bot.fetch_user(user.id)).banner
@@ -298,7 +298,7 @@ async def get_userinfo(
         )
         return [Embed, av, dc]
     else:
-        av = disnake.Embed(
+        av = discord.Embed(
             title="Avatar", colour=await color(user, guild, bot), timestamp=dt
         )
 
@@ -373,4 +373,4 @@ def draw_color(color: Tuple[int]):
     with BytesIO() as imagebuffer:
         image.save(imagebuffer, 'PNG')
         imagebuffer.seek(0)
-        return disnake.File(fp=imagebuffer, filename='banner_color.png')
+        return discord.File(fp=imagebuffer, filename='banner_color.png')

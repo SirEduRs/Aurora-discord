@@ -8,7 +8,7 @@ if TYPE_CHECKING:
 else:
     Aurora: TypeAlias = None
 
-from disnake.ext import commands
+from discord.ext import commands
 
 from .enums import SearchType
 
@@ -19,7 +19,7 @@ SOUNDCLOUD_URL_REGEX = re.compile(
 
 class Track:
     """The base track object. Returns critical track information needed for parsing by Lavalink.
-       You can also pass in commands.Context to get a disnake Context object in your track.
+       You can also pass in commands.Context to get a discord Context object in your track.
     """
     def __init__(
         self,
@@ -79,7 +79,7 @@ class Track:
 class Playlist:
     """The base playlist object.
        Returns critical playlist information needed for parsing by Lavalink.
-       You can also pass in commands.Context to get a disnake Context object in your tracks.
+       You can also pass in commands.Context to get a discord Context object in your tracks.
     """
     def __init__(
         self,

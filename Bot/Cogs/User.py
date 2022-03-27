@@ -22,8 +22,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 from PIL.ImageColor import getcolor
 
 from Aurora import AuroraClass
@@ -54,12 +54,12 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         self,
         ctx: commands.Context[AuroraClass],
         *,
-        member: disnake.Member | disnake.User = None
+        member: discord.Member | discord.User = None
     ):
-        dt = disnake.utils.utcnow()
+        dt = discord.utils.utcnow()
         member = member or ctx.author
         if member == ctx.author:
-            Embeder = disnake.Embed(
+            Embeder = discord.Embed(
                 title="Sua foto de perfil:", colour=0x0101DF, timestamp=dt
             )
             Embeder.set_image(url=member.display_avatar)
@@ -69,7 +69,7 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
             )
             return await ctx.send(embed=Embeder)  # type: ignore
         elif member == ctx.me:
-            Embeder = disnake.Embed(
+            Embeder = discord.Embed(
                 title="Foto de Perfil do BOT:", colour=0x0101DF, timestamp=dt
             )
             Embeder.set_image(url=member.display_avatar)
@@ -79,7 +79,7 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
             )
             return await ctx.send(embed=Embeder)  # type: ignore
         else:
-            Embeder = disnake.Embed(
+            Embeder = discord.Embed(
                 title=f"Foto de perfil de {member}",
                 colour=0x0101DF,
                 timestamp=dt
@@ -102,9 +102,9 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         self,
         ctx: commands.Context[AuroraClass],
         *,
-        member: disnake.Member | disnake.User = None
+        member: discord.Member | discord.User = None
     ):
-        dt = disnake.utils.utcnow()
+        dt = discord.utils.utcnow()
         member = member or ctx.author
         banner = (await self.bot.fetch_user(member.id)).banner
         if banner is None:
@@ -114,15 +114,16 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
                 txt = "Seu banner:"
             else:
                 txt = f"Banner de {member}"
-            Embeder = disnake.Embed(
-                title=txt, colour=disnake.Colour.random(), timestamp=dt
+            Embeder = discord.Embed(
+                title=txt, colour=discord.Colour.random(), timestamp=dt
             )
-            Embeder.set_image(file=draw_color(getcolor(banner_color, "RGB")))
-            return await ctx.send(embed=Embeder)  # type: ignore
+            File = draw_color(getcolor(banner_color, "RGB"))
+            Embeder.set_image(url="attachment://banner_color.png")
+            return await ctx.send(file=File, embed=Embeder)  # type: ignore
         if member == ctx.author:
-            Embeder = disnake.Embed(
+            Embeder = discord.Embed(
                 title="Seu banner:",
-                colour=disnake.Colour.random(),
+                colour=discord.Colour.random(),
                 timestamp=dt
             )
             Embeder.set_image(url=banner)
@@ -132,9 +133,9 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
             )
             return await ctx.send(embed=Embeder)  # type: ignore
         else:
-            Embeder = disnake.Embed(
+            Embeder = discord.Embed(
                 title=f"Banner de {member}",
-                colour=disnake.Colour.random(),
+                colour=discord.Colour.random(),
                 timestamp=dt
             )
             Embeder.set_image(url=banner)
@@ -155,7 +156,7 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         self,
         ctx: commands.Context[AuroraClass],
         *,
-        user: disnake.Member = None
+        user: discord.Member = None
     ):
         user = user or ctx.author
         list_embeds = await get_userinfo(
@@ -167,8 +168,8 @@ class User(commands.Cog, name=":bust_in_silhouette: Usuário"):  # type: ignore
         await ctx.send(embed=list_embeds[0], view=View)
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(User(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(User(bot))
     print(
         "\033[1;92m[Cog Load]\033[1;94m User\033[1;96m carregado com sucesso !"
     )

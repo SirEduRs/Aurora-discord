@@ -6,7 +6,6 @@ authors = ["Eduardo <rodrigueseduardo1966@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.10"
-disnake-jishaku = "2.6.5"
 psutil = "5.7.0"
 python-dateutil = "2.8.0"
 python-dotenv = "0.10.0"
@@ -20,7 +19,8 @@ humanize = "^3.13.1"
 paramiko = "^2.9.1"
 Pillow = "^9.0.0"
 toml = "^0.10.2"
-disnake = "^2.4.0"
+"discord.py" = {git = "https://github.com/Rapptz/discord.py", rev = "master"}
+jishaku = {git = "https://github.com/Gorialis/jishaku", rev = "master"}
 
 [tool.poetry.dev-dependencies]
 mypy = "^0.931"
@@ -45,4 +45,5 @@ indent_width = 4
 [tool.yapfignore]
 ignore_patterns = [
     "Utils/pomice/events.py",
+    "Utils/Utilidades.py",
 ]

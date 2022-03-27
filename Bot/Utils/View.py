@@ -26,9 +26,9 @@ import asyncio
 import json
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, TypeAlias
 
-import disnake
+import discord
 import pytz
-from disnake.ext import commands
+from discord.ext import commands
 
 from .Utilidades import permissions
 
@@ -84,8 +84,8 @@ class Compact:
             return zip(self.name, self.id, self.icon)
 
 
-class Select(disnake.ui.Select):  # type: ignore
-    def __init__(self, role: Dict[Any, Any], guild: disnake.Guild):
+class Select(discord.ui.Select):  # type: ignore
+    def __init__(self, role: Dict[Any, Any], guild: discord.Guild):
         self.role = Compact(role).returnlist("role")
         self.guild = guild
         self.value = None
@@ -94,20 +94,20 @@ class Select(disnake.ui.Select):  # type: ignore
             min_values=1,
             max_values=1,
             options=[
-                disnake.SelectOption(
+                discord.SelectOption(
                     label=f"ID: {idr}", description=name, value=name
                 ) for name, idr in self.role
             ]
         )  # type: ignore
 
-    async def callback(self, interaction: disnake.MessageInteraction):
-        role = disnake.utils.get(
+    async def callback(self, interaction: discord.Interaction):
+        role = discord.utils.get(
             self.guild.roles, name=interaction.values[0]
         )  # type: ignore
         if role:
             members: List[str] = list()
             perms: List[str] = list()
-            dt = disnake.utils.utcnow()
+            dt = discord.utils.utcnow()
 
             [members.append(re.mention) for re in role.members]  # type: ignore
             [
@@ -123,7 +123,7 @@ class Select(disnake.ui.Select):  # type: ignore
             date = role.created_at.replace(
                 tzinfo=pytz.timezone('America/Sao_Paulo')
             )
-            Embed = disnake.Embed(
+            Embed = discord.Embed(
                 colour=role.color,
                 timestamp=dt,
                 description=f"⦂⦂ **ID**: `{role.id}`\n"
@@ -146,13 +146,13 @@ class Select(disnake.ui.Select):  # type: ignore
             )  # type: ignore
 
 
-class ViewConfirm(disnake.ui.View):
+class ViewConfirm(discord.ui.View):
     def __init__(self, author_id: int):
         self.author_id = author_id
         super().__init__()
         self.value: bool = False
 
-    async def interaction_check(self, interaction: disnake.MessageInteraction):
+    async def interaction_check(self, interaction: discord.Interaction):
         if interaction.user.id != self.author_id:
             await interaction.response.send_message(
                 content="Você não pode interagir aqui !", ephemeral=True
@@ -161,27 +161,27 @@ class ViewConfirm(disnake.ui.View):
         else:
             return True
 
-    @disnake.ui.button(
-        emoji=_emoji["confirm"], style=disnake.ButtonStyle.green
+    @discord.ui.button(
+        emoji=_emoji["confirm"], style=discord.ButtonStyle.green
     )  # type: ignore
     async def _confirm(self, _):
         self.value = True
         self.stop()
 
-    @disnake.ui.button(
-        emoji=_emoji["cancel"], style=disnake.ButtonStyle.red
+    @discord.ui.button(
+        emoji=_emoji["cancel"], style=discord.ButtonStyle.red
     )  # type: ignore
     async def _cancel(self, _):
         self.value = False
         self.stop()
 
 
-class ViewSimple(disnake.ui.View):
+class ViewSimple(discord.ui.View):
     def __init__(self, author_id: int):
         self.author_id = author_id
         super(ViewSimple, self).__init__()
 
-    async def interaction_check(self, interaction: disnake.MessageInteraction):
+    async def interaction_check(self, interaction: discord.Interaction):
         if interaction.user.id != self.author_id:
             await interaction.response.send_message(
                 content="Você não pode interagir aqui !", ephemeral=True
@@ -191,15 +191,15 @@ class ViewSimple(disnake.ui.View):
             return True
 
 
-class Paginator(disnake.ui.View):
-    def __init__(self, pages: List[disnake.Embed], ctx_id: int):
+class Paginator(discord.ui.View):
+    def __init__(self, pages: List[discord.Embed], ctx_id: int):
         self.cur_page: int = 1
         self.pages = pages
         self.ctx_id = ctx_id
         self.n_pages: int = len(pages)
         super().__init__(timeout=60.0)
 
-    async def interaction_check(self, interaction: disnake.MessageInteraction):
+    async def interaction_check(self, interaction: discord.Interaction):
         if interaction.user.id != self.ctx_id:
             await interaction.response.send_message(
                 content="Você não pode interagir aqui !", ephemeral=True
@@ -209,12 +209,12 @@ class Paginator(disnake.ui.View):
             return True
 
     @staticmethod
-    def paginate_emojis(list_emoji: List[disnake.Emoji],
-                        guild: disnake.Guild) -> List[disnake.Embed]:
+    def paginate_emojis(list_emoji: List[discord.Emoji],
+                        guild: discord.Guild) -> List[discord.Embed]:
         collectionstr = list()
         for lists in list_emoji:
             collectionstr.append(
-                disnake.Embed(
+                discord.Embed(
                     title=f"Emojis: {len(guild.emojis)}",
                     description='\n'.join(map(lambda c: f'{c} ➞ `{c}`', lists))
                 )
@@ -225,13 +225,13 @@ class Paginator(disnake.ui.View):
     def current(self):
         return str(self.cur_page)
 
-    @disnake.ui.button(
+    @discord.ui.button(
         label="\N{BLACK LEFT-POINTING TRIANGLE}",
-        style=disnake.ButtonStyle.secondary,
+        style=discord.ButtonStyle.secondary,
         disabled=True
     )  # type: ignore
     async def button_last(
-        self, button: disnake.Button, interaction: disnake.MessageInteraction
+        self, interaction: discord.Interaction, button: discord.Button
     ):
         if self.cur_page > 1:
             self.cur_page -= 1
@@ -242,19 +242,20 @@ class Paginator(disnake.ui.View):
                 embed=self.pages[self.cur_page - 1], view=self
             )  # type: ignore
 
-    @disnake.ui.button(
-        label="1", style=disnake.ButtonStyle.primary, disabled=True
+    @discord.ui.button(
+        label="1", style=discord.ButtonStyle.primary, disabled=True
     )  # type: ignore
-    async def button_current(self, _, interaction: disnake.MessageInteraction):
-        self.button_current.label = self.current  # type: ignore
-        await interaction.response.edit_message(view=self)  # type: ignore
+    async def button_current(
+        self, interaction: discord.Interaction, _: discord.Button
+    ):
+        pass
 
-    @disnake.ui.button(
+    @discord.ui.button(
         label="\N{BLACK RIGHT-POINTING TRIANGLE}",
-        style=disnake.ButtonStyle.secondary
+        style=discord.ButtonStyle.secondary
     )  # type: ignore
     async def button_next(
-        self, button: disnake.Button, interaction: disnake.Interaction
+        self, interaction: discord.Interaction, button: discord.Button
     ):
         if self.cur_page != self.n_pages:
             self.cur_page += 1
@@ -265,27 +266,27 @@ class Paginator(disnake.ui.View):
                 embed=self.pages[self.cur_page - 1], view=self
             )  # type: ignore
 
-    @disnake.ui.button(
-        emoji=_emoji["stop"], style=disnake.ButtonStyle.red
+    @discord.ui.button(
+        emoji=_emoji["stop"], style=discord.ButtonStyle.red
     )  # type: ignore
     async def button_stop(
-        self, button: disnake.Button, interaction: disnake.Interaction
+        self, interaction: discord.Interaction, _: discord.Button
     ):
         await interaction.response.edit_message(view=None)  # type: ignore
 
-    @disnake.ui.button(
-        emoji=_emoji["trash"], style=disnake.ButtonStyle.red
+    @discord.ui.button(
+        emoji=_emoji["trash"], style=discord.ButtonStyle.red
     )  # type: ignore
     async def button_close(
-        self, button: disnake.Button, interaction: disnake.Interaction
+        self, interaction: discord.Interaction, _: discord.Button
     ):
         await interaction.message.delete()  # type: ignore
 
 
-class ViewerAdmin(disnake.ui.View):
+class ViewerAdmin(discord.ui.View):
     def __init__(
         self, ctx: commands.Context[Aurora], action: str,
-        member: disnake.Member, reason: str, guild: disnake.Guild
+        member: discord.Member, reason: str, guild: discord.Guild
     ):
         self.action = action
         self.member = member
@@ -294,7 +295,7 @@ class ViewerAdmin(disnake.ui.View):
         self.ctx = ctx
         super().__init__(timeout=60.0)
 
-    async def interaction_check(self, interaction: disnake.Interaction):
+    async def interaction_check(self, interaction: discord.Interaction):
         if interaction.user.id != self.ctx.author.id:
             await interaction.response.send_message(
                 content="Você não pode interagir aqui !", ephemeral=True
@@ -303,11 +304,11 @@ class ViewerAdmin(disnake.ui.View):
         else:
             return True
 
-    @disnake.ui.button(
-        emoji=_emoji["confirm"], style=disnake.ButtonStyle.green
+    @discord.ui.button(
+        emoji=_emoji["confirm"], style=discord.ButtonStyle.green
     )  # type: ignore
     async def _confirm(
-        self, button: disnake.Button, interaction: disnake.Interaction
+        self, button: discord.Button, interaction: discord.Interaction
     ):
         if self.action == "kick":
             self.action = "expulsou"
@@ -319,25 +320,25 @@ class ViewerAdmin(disnake.ui.View):
             self.action = "desbaniu"
             await self.guild.unban(self.member)
         await interaction.response.edit_message(  # type: ignore
-            embed=disnake.Embed(
+            embed=discord.Embed(
                 description=
                 f"Você {self.action} o membro {self.member.mention} com sucesso !!\nMotivo: `{self.reason}`",
-                colour=disnake.Colour.random()),
+                colour=discord.Colour.random()),
             view=None)
 
-    @disnake.ui.button(
-        emoji=_emoji["cancel"], style=disnake.ButtonStyle.red
+    @discord.ui.button(
+        emoji=_emoji["cancel"], style=discord.ButtonStyle.red
     )  # type: ignore
     async def _cancel(
-        self, button: disnake.Button, interaction: disnake.Interaction
+        self, button: discord.Button, interaction: discord.Interaction
     ):
         await interaction.response.edit_message(  # type: ignore
-            embed=disnake.Embed(description=f"Comando cancelado !!", ),
+            embed=discord.Embed(description=f"Comando cancelado !!", ),
             view=None)
 
 
 # ---------------------------------------------------------------------------------------------------------------------- #
-class SelectLogs(disnake.ui.Select):  # type: ignore
+class SelectLogs(discord.ui.Select):  # type: ignore
     def __init__(
         self, logs: Dict[Any, Any], ctx: commands.Context[Aurora], bot: Aurora
     ):
@@ -348,43 +349,43 @@ class SelectLogs(disnake.ui.Select):  # type: ignore
             min_values=1,
             max_values=1,
             options=[
-                disnake.SelectOption(label=name, value=log)
+                discord.SelectOption(label=name, value=log)
                 for name, log in self.logs
             ]
         )  # type: ignore
 
-    async def callback(self, interaction: disnake.Interaction):
+    async def callback(self, interaction: discord.Interaction):
         VIEW = ViewConfirm(interaction.user.id)
         log: str = interaction.values[0]  # type: ignore
         log = "📄 Logs de Mensagem" if log == "message_log" else log
         log = "👤 Logs de Membro" if log == "member_log" else log
         log = "⚙️ Logs de Moderação" if log == "mod_log" else log
         await interaction.response.edit_message(  # type: ignore
-            embed=disnake.Embed(
+            embed=discord.Embed(
                 description=
                 f"Log selecionado: **{log}**\nVocê tem certeza que deseja ativar/desativar o log ?",
-                colour=disnake.Colour.random()),
+                colour=discord.Colour.random()),
             view=VIEW)
         await VIEW.wait()
         await interaction.delete_original_message()
         if VIEW.value:
             await self.ctx.send(  # type: ignore
-                embed=disnake.Embed(
+                embed=discord.Embed(
                     description=f"Qual canal você deseja que seja os logs ?",
-                    colour=disnake.Colour.random()),
+                    colour=discord.Colour.random()),
                 view=None)  # type: ignore
             try:
                 func: Callable[
-                    [disnake.Message], bool
+                    [discord.Message], bool
                 ] = lambda m: m.author.id == interaction.user.id and m.channel == interaction.channel
                 message = await self.bot.wait_for(
                     "message", check=func, timeout=60.0
                 )
             except asyncio.TimeoutError:
                 return await self.ctx.send(  # type: ignore
-                    embed=disnake.Embed(
+                    embed=discord.Embed(
                         description=f"Tempo esgotado, comando cancelado !!",
-                        colour=disnake.Colour.random()))
+                        colour=discord.Colour.random()))
 
             channel = await commands.TextChannelConverter().convert(
                 self.ctx, message.content
@@ -392,28 +393,28 @@ class SelectLogs(disnake.ui.Select):  # type: ignore
 
             if channel is None:
                 return await self.ctx.send(  # type: ignore
-                    embed=disnake.Embed(
+                    embed=discord.Embed(
                         description=
                         f"Canal não encontrado, comando cancelado !!",
-                        colour=disnake.Colour.random()))
+                        colour=discord.Colour.random()))
 
             await self.bot.db.set_log(
                 self.ctx.guild.id, channel.id, interaction.values[0]
             )  # type: ignore
 
             return await self.ctx.send(  # type: ignore
-                embed=disnake.Embed(description=f"Log ativado com sucesso !!",
-                                    colour=disnake.Colour.random()), )
+                embed=discord.Embed(description=f"Log ativado com sucesso !!",
+                                    colour=discord.Colour.random()), )
         elif VIEW.value is None:
             return await self.ctx.send(  # type: ignore
-                embed=disnake.Embed(description=f"Comando cancelado !!",
-                                    colour=disnake.Colour.random()))
+                embed=discord.Embed(description=f"Comando cancelado !!",
+                                    colour=discord.Colour.random()))
 
         elif VIEW.value is False:
             await self.bot.db.set_log(
                 self.ctx.guild.id, None, interaction.values[0]
             )  # type: ignore
             return await self.ctx.send(  # type: ignore
-                embed=disnake.Embed(
+                embed=discord.Embed(
                     description=f"Log desativado com sucesso !!",
-                    colour=disnake.Colour.random()))
+                    colour=discord.Colour.random()))

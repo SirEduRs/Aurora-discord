@@ -1,7 +1,7 @@
 from datetime import timedelta
 
-import disnake
-from disnake.ext.commands import (  # type: ignore
+import discord
+from discord.ext.commands import (  # type: ignore
     BucketType,
     Cog,
     Context,
@@ -69,14 +69,14 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
                 await player.queue.put(track)  # type: ignore
             if player.is_playing:
                 count = len(results.tracks)
-                embed = disnake.Embed(
+                embed = discord.Embed(
                     title=
                     f":white_check_mark: Playlist adicionada a fila com sucesso !",
                     description=
                     f":name_badge: Nome: **[{results.name}]({music})**\n"
                     f":hourglass: Duração: `{precisedelta(timedelta(milliseconds=lenght))}`\n"
                     f":musical_note: Músicas: `{count}`",
-                    colour=disnake.Colour.random()
+                    colour=discord.Colour.random()
                 )
                 embed.set_thumbnail(url=results.thumbnail)
                 embed.set_footer(text=f"Tocando agora: {player.current.title}")
@@ -85,11 +85,11 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
             track = results[0]
             await player.queue.put(track)  # type: ignore
             if player.is_playing:
-                embed = disnake.Embed(
+                embed = discord.Embed(
                     title=
                     ":white_check_mark: Música adicionada a fila com sucesso !",
                     description=f"[{track.title}]({track.uri})",  # type: ignore
-                    colour=disnake.Colour.random()
+                    colour=discord.Colour.random()
                 )
                 embed.set_thumbnail(url=track.thumbnail)  # type: ignore
                 embed.set_footer(
@@ -173,7 +173,7 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
             )
 
         await player.teardown()
-        await ctx.send(embed=disnake.Embed(  # type: ignore
+        await ctx.send(embed=discord.Embed(  # type: ignore
             title=":white_check_mark: Música parada com sucesso !", ))
 
     @command(
@@ -190,7 +190,7 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
         if not player.is_playing:
             return await Embed(ctx, message="Não estou tocando nada !")
         await player.set_volume(volume)
-        await ctx.send(embed=disnake.Embed(  # type: ignore
+        await ctx.send(embed=discord.Embed(  # type: ignore
             title=":white_check_mark: Volume alterado com sucesso !",
             description=f"**Volume**: `{volume}`"
         ))
@@ -207,10 +207,10 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
         if not player.queue.qsize():
             return await Embed(ctx, message="A fila está vazia !")
 
-        embed = disnake.Embed(
+        embed = discord.Embed(
             title=":musical_note: Fila de músicas",
             description="",
-            colour=disnake.Colour.random()
+            colour=discord.Colour.random()
         )
 
         embed.set_footer(text=f"Tocando agora: {player.current.title}")
@@ -237,7 +237,7 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
             )
 
         player.loop = not player.loop
-        await ctx.send(embed=disnake.Embed(  # type: ignore
+        await ctx.send(embed=discord.Embed(  # type: ignore
             title=":white_check_mark: Loop alterado com sucesso !",
             description=f"**Loop**: `{'Ativado' if player.loop else 'Desativado'}` na música atual."
         ))
@@ -272,5 +272,5 @@ class MusicBot(Cog, name="<:music:936038809794138143> Música"):  # type: ignore
         await player.do_next()
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(MusicBot(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(MusicBot(bot))

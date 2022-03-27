@@ -28,9 +28,9 @@ import time
 import traceback
 from io import BytesIO
 
-import disnake
-from disnake import Colour, Embed
-from disnake.ext import commands
+import discord
+from discord import Colour, Embed
+from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils.Utilidades import pretty
@@ -64,20 +64,19 @@ class ComandosOwnerBot(
             desc = ""
             channel = await self.bot.fetch_channel(866314136534253618)
             for ext in list(self.bot.extensions):
-                print(ext)
                 if ext != "jishaku":
                     try:
-                        self.bot.reload_extension(ext)
+                        await self.bot.reload_extension(ext)
                     except Exception as e:
                         desc += f"<:cancelar:858707313452122162> `{ext}`\n"
-                        await channel.send(embed=disnake.Embed(  # type: ignore
+                        await channel.send(embed=discord.Embed(  # type: ignore
                             colour=0x3399ff,
                             description=f"```py\n{e}```"))
                     else:
                         desc += f"<:confirmar:858707288105287720> `{ext}`\n"
 
-            await ctx.send(embed=disnake.Embed(  # type: ignore
-                colour=disnake.Colour.random(),
+            await ctx.send(embed=discord.Embed(  # type: ignore
+                colour=discord.Colour.random(),
                 title="Extensions Reloaded !",
                 description=desc))
         else:
@@ -103,22 +102,22 @@ class ComandosOwnerBot(
     ):
         arq = None
 
-        class Error(disnake.ui.View):
+        class Error(discord.ui.View):
             def __init__(self):
                 super(Error, self).__init__()
 
-            async def interaction_check(self, interaction: disnake.Interaction):
+            async def interaction_check(self, interaction: discord.Interaction):
                 if interaction.user.id != ctx.author.id:  # type: ignore
                     return False
                 else:
                     return True
 
-            @disnake.ui.button(
+            @discord.ui.button(
                 emoji="<:trash:822156106683121694>",
-                style=disnake.ButtonStyle.red
+                style=discord.ButtonStyle.red
             )  # type: ignore
             async def trasherr(
-                self, button: disnake.Button, interaction: disnake.Interaction
+                self, button: discord.Button, interaction: discord.Interaction
             ):
                 if arq:
                     await archerrdb.delete()
@@ -132,22 +131,22 @@ class ComandosOwnerBot(
                     view=self
                 )  # type: ignore
 
-        class Result(disnake.ui.View):
+        class Result(discord.ui.View):
             def __init__(self):
                 super(Result, self).__init__()
 
-            async def interaction_check(self, interaction: disnake.Interaction):
+            async def interaction_check(self, interaction: discord.Interaction):
                 if interaction.user.id != ctx.author.id:  # type: ignore
                     return False
                 else:
                     return True
 
-            @disnake.ui.button(
+            @discord.ui.button(
                 emoji="<:trash:822156106683121694>",
-                style=disnake.ButtonStyle.red
+                style=discord.ButtonStyle.red
             )  # type: ignore
             async def trashres(
-                self, button: disnake.Button, interaction: disnake.Interaction
+                self, button: discord.Button, interaction: discord.Interaction
             ):
                 if arq:
                     await arch.delete()
@@ -161,12 +160,12 @@ class ComandosOwnerBot(
                     view=self
                 )  # type: ignore
 
-            @disnake.ui.button(
+            @discord.ui.button(
                 emoji="<:result:822893531491336252>",
-                style=disnake.ButtonStyle.green
+                style=discord.ButtonStyle.green
             )  # type: ignore
             async def resultr(
-                self, button: disnake.Button, interaction: disnake.Interaction
+                self, button: discord.Button, interaction: discord.Interaction
             ):
                 for chil in self.children:  # type: ignore
                     chil.disabled = True  # type: ignore
@@ -199,7 +198,7 @@ class ComandosOwnerBot(
                     )
                 if arq:
                     archerrdb = await ctx.send(
-                        file=disnake.File(
+                        file=discord.File(
                             filename='error.py',
                             fp=BytesIO(err.encode('utf-8'))
                         )
@@ -246,7 +245,7 @@ class ComandosOwnerBot(
                         )
                     if arq:
                         arch = await ctx.send(
-                            file=disnake.File(
+                            file=discord.File(
                                 filename='result.py',
                                 fp=BytesIO(result.encode('utf-8'))
                             )
@@ -256,15 +255,15 @@ class ComandosOwnerBot(
                     )  # type: ignore
         else:
             await ctx.send(
-                embed=disnake.Embed(
+                embed=discord.Embed(
                     colour=0x3399ff,
                     description="Você precisa inserir a query para eu executar !"
                 )
             )  # type: ignore
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(ComandosOwnerBot(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(ComandosOwnerBot(bot))
     print(
         "\033[1;92m[Cog Load]\033[1;94m Owner\033[1;96m carregado com sucesso !"
     )

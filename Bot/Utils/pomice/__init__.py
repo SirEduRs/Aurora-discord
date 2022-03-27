@@ -6,15 +6,15 @@ The modern Lavalink wrapper designed for discord.py.
 :license: GPL-3.0
 """
 
-import disnake
+import discord
 
-if not disnake.__version__.startswith("2"):
+if not discord.__version__.startswith("2"):
 
     class DiscordPyOutdated(Exception):
         pass
 
     raise DiscordPyOutdated(
-        "You need the 'disnake' library to use this library"
+        "You need the 'discord' library to use this library"
     )
 
 __version__ = "1.1.7"

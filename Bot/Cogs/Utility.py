@@ -24,8 +24,8 @@ SOFTWARE.
 
 from typing import Tuple
 
-import disnake
-from disnake.ext import commands
+import discord
+from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils import Paginator
@@ -50,7 +50,7 @@ class UtilityCog(commands.Cog, name=":toolbox: Utilidades"):  # type: ignore
     )
     @commands.guild_only()
     async def _emojis(self, ctx: commands.Context[commands.Bot]):
-        guild_emojis: Tuple[disnake.Emoji] = ctx.guild.emojis
+        guild_emojis: Tuple[discord.Emoji] = ctx.guild.emojis
         list_embeds = Paginator.paginate_emojis(
             split_list(guild_emojis, 25), ctx.guild
         )
@@ -59,5 +59,5 @@ class UtilityCog(commands.Cog, name=":toolbox: Utilidades"):  # type: ignore
         )  # type: ignore
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(UtilityCog(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(UtilityCog(bot))

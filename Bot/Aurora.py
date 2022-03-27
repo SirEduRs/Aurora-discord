@@ -30,10 +30,10 @@ from datetime import datetime
 from typing import Any
 
 import aiohttp
-import disnake  # type: ignore
+import discord  # type: ignore
 import firebase_admin  # type: ignore
-from disnake.ext import commands
-from disnake.ext.commands import Bot  # type: ignore
+from discord.ext import commands
+from discord.ext.commands import Bot  # type: ignore
 from firebase_admin import credentials  # type: ignore
 
 from Utils import Database, Firebase  # type: ignore
@@ -46,7 +46,7 @@ firebase_admin.initialize_app(
     credentials.ApplicationDefault(), {'projectId': 'mta-sa-iz-server'}
 )  # type: ignore
 
-intents = disnake.Intents.all()
+intents = discord.Intents.all()
 
 path = pathlib.Path('Cogs')
 
@@ -56,7 +56,7 @@ with open("Utils/Archives/emojis.json") as emojis:
 
 class AuroraClass(Bot):
     def __init__(self, *args: Any, **kwargs: Any):
-        async def prefix(bot: commands.Bot, message: disnake.Message):
+        async def prefix(bot: Bot, message: discord.Message):
             db = Database(bot)
             prefixx = await db.get_prefix(message)  # type: ignore
             return commands.when_mentioned_or(prefixx)(
@@ -68,7 +68,6 @@ class AuroraClass(Bot):
         kwargs['help_command'] = None
         kwargs['case_insensitive'] = True
         super().__init__(*args, **kwargs)  # type: ignore
-        self.load_extension("jishaku")
         self.utils = {
             "uptime": datetime.now(),
             "commands": 0,
@@ -88,24 +87,21 @@ class AuroraClass(Bot):
         return _emoji[emoji]
 
     async def load_cogs(self):
+        await self.load_extension("jishaku")
+
+        self.pool = await Database(self).initialize_pool()
+        self.session = aiohttp.ClientSession()
+
         for f in path.rglob('*.py'):
             with open(f, 'rb') as of:
                 for l in of.read().decode().splitlines():
-                    if l.startswith('def setup(bot: AuroraClass)'):
+                    if l.startswith('async def setup(bot: AuroraClass)'):
                         f = str(f).replace("/", ".")
                         try:
-                            self.load_extension(f[:-3])
+                            await self.load_extension(f[:-3])
                         except Exception as e:
                             print(e)
 
-    async def on_ready(self):
-        self.session: aiohttp.ClientSession = self.http._HTTPClient__session  # type: ignore
-
-    async def run_bot(self):
-        try:
-            self.pool = await Database(self).initialize_pool()
-            await self.load_cogs()
-            await super().start(os.environ['DISCORD_TOKEN'], reconnect=True)
-        except:
-            await self.close()
-            raise
+    async def close(self):
+        await super().close()
+        await self.session.close()

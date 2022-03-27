@@ -11,9 +11,9 @@ from typing import TYPE_CHECKING, Any, Dict, Optional, TypeAlias
 from urllib.parse import quote
 
 import aiohttp
-import disnake
-from disnake import Client, VoiceRegion
-from disnake.ext import commands
+import discord
+from discord import Client
+from discord.ext import commands
 
 from . import __version__, spotify
 from .enums import NodeAlgorithm, SearchType
@@ -65,7 +65,7 @@ class Node:
         identifier: str,
         secure: bool = False,
         heartbeat: int = 30,
-        region: Optional[VoiceRegion] = None,
+        region: str = None,
         session: Optional[aiohttp.ClientSession] = None,
         spotify_client_id: Optional[str] = None,
         spotify_client_secret: Optional[str] = None,
@@ -78,7 +78,7 @@ class Node:
         self._identifier = identifier
         self._heartbeat = heartbeat
         self._secure = secure
-        self._region: Optional[VoiceRegion] = region
+        self._region: str = region
 
         self._websocket_uri = f"{'wss' if self._secure else 'ws'}://{self._host}:{self._port}"
         self._rest_uri = f"{'https' if self._secure else 'http'}://{self._host}:{self._port}"
@@ -131,13 +131,13 @@ class Node:
         return self._players
 
     @property
-    def region(self) -> Optional[VoiceRegion]:
+    def region(self) -> Optional[str]:
         """Property which returns the VoiceRegion of the node, if one is set"""
         return self._region
 
     @property
     def bot(self) -> Client:
-        """Property which returns the disnake client linked to this node"""
+        """Property which returns the discord client linked to this node"""
         return self._bot
 
     @property
@@ -270,7 +270,7 @@ class Node:
         """
         Builds a track using a valid track identifier
 
-        You can also pass in a disnake Context object to get a
+        You can also pass in a discord Context object to get a
         Context object on the track it builds.
         """
 
@@ -299,7 +299,7 @@ class Node:
            If you passed in Spotify API credentials, you can also pass in a
            Spotify URL of a playlist, album or track and it will be parsed accordingly.
 
-           You can also pass in a disnake Context object to get a
+           You can also pass in a discord Context object to get a
            Context object on any track you search.
         """
 
@@ -455,10 +455,7 @@ class NodePool:
 
     @classmethod
     def get_best_node(
-        cls,
-        *,
-        algorithm: NodeAlgorithm,
-        voice_region: VoiceRegion = None
+        cls, *, algorithm: NodeAlgorithm, voice_region: str = None
     ) -> Node:
         """Fetches the best node based on an NodeAlgorithm.
          This option is preferred if you want to choose the best node
@@ -539,7 +536,7 @@ class NodePool:
         identifier: str,
         secure: bool = False,
         heartbeat: int = 30,
-        region: Optional[VoiceRegion] = None,
+        region: Optional[str] = None,
         spotify_client_id: Optional[str] = None,
         spotify_client_secret: Optional[str] = None,
         session: Optional[aiohttp.ClientSession] = None,

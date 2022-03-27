@@ -4,8 +4,8 @@ from __future__ import annotations
 import time
 from typing import TYPE_CHECKING, Any, Dict, Optional, TypeAlias
 
-from disnake import Client, Guild, VoiceChannel, VoiceProtocol
-from disnake.ext import commands
+from discord import Client, Guild, VoiceChannel, VoiceProtocol
+from discord.ext import commands
 
 from . import events
 from .enums import SearchType
@@ -201,7 +201,7 @@ class Player(VoiceProtocol):
         you can also pass in a Spotify URL of a playlist, album or track and it will be parsed
         accordingly.
 
-        You can also pass in a disnake Context object to get a
+        You can also pass in a discord Context object to get a
         Context object on any track you search.
         """
         return await self._node.get_tracks(

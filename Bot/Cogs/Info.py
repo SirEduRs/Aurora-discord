@@ -27,10 +27,11 @@ from asyncio import sleep
 from datetime import datetime
 from sys import platform as _platform
 
-import disnake
+import discord
 import psutil  # type: ignore
 import pytz
-from disnake.ext import commands
+from discord import app_commands
+from discord.ext import commands
 from humanize import i18n, naturalsize, precisedelta  # type: ignore
 from stopwatch import Stopwatch as timer  # type: ignore
 
@@ -58,17 +59,17 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
 
     @commands.command(description="Mostra o ping do bot.")
     async def ping(self, ctx: commands.Context[AuroraClass]):
-        dt = disnake.utils.utcnow()
+        dt = discord.utils.utcnow()
         """ Pong! """
         before_ws = int(round(self.bot.latency * 1000, 1))
         pingdb = timer()
         await self.bot.pool.execute('SELECT version();')  # type: ignore
         pingdb.stop()
         Timer = timer()
-        mes = await ctx.reply(embed=disnake.Embed(title="Calculando o ping..."))
+        mes = await ctx.reply(embed=discord.Embed(title="Calculando o ping..."))
         Timer.stop()
         await sleep(1)
-        await mes.edit(embed=disnake.Embed(  # type: ignore
+        await mes.edit(embed=discord.Embed(  # type: ignore
             title="PING",
             color=0x3399ff,
             timestamp=dt,
@@ -79,14 +80,12 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         ).set_footer(text=f"Comando usado por {ctx.author.name}",
                      icon_url=ctx.author.display_avatar))
 
-    @commands.slash_command(
+    @app_commands.command(
         name="ping", description="Mostra o ping do bot."
     )  # type: ignore
-    async def ping_slash(
-        self, interaction: disnake.ApplicationCommandInteraction
-    ):
+    async def ping_slash(self, interaction: discord.Interaction):
         #Create ping command in slash command
-        dt = disnake.utils.utcnow()
+        dt = discord.utils.utcnow()
         before_ws = int(round(self.bot.latency * 1000, 1))
         pingdb = timer()
         await self.bot.pool.execute('SELECT version();')  # type: ignore
@@ -95,7 +94,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         await interaction.response.defer()
         Timer.stop()
         await sleep(1)
-        await interaction.edit_original_message(embed=disnake.Embed(  # type: ignore
+        await interaction.edit_original_message(embed=discord.Embed(  # type: ignore
             title="PING",
             color=0x3399ff,
             timestamp=dt,
@@ -114,10 +113,10 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
     async def uptime(self, ctx: commands.Context[AuroraClass]):
         uptime = datetime.now() - self.bot.utils["uptime"]
         return await ctx.send(
-            embed=disnake.Embed(
-                timestamp=disnake.utils.utcnow(),
+            embed=discord.Embed(
+                timestamp=discord.utils.utcnow(),
                 description=
-                f"<:time:830085577096691712> Uptime:\n{precisedelta(uptime, format='%0.0f')} ({disnake.utils.format_dt(self.bot.utils['uptime'], 'R')})"
+                f"<:time:830085577096691712> Uptime:\n{precisedelta(uptime, format='%0.0f')} ({discord.utils.format_dt(self.bot.utils['uptime'], 'R')})"
             ).set_footer(
                 text=f"Comando usado por {ctx.author.name}",
                 icon_url=ctx.author.display_avatar
@@ -149,8 +148,8 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         commands_bot = await self.bot.fdb.get_document(
             'bot', 'commands'
         )  # type: ignore
-        statics = disnake.Embed(
-            colour=disnake.Colour.random(), timestamp=disnake.utils.utcnow()
+        statics = discord.Embed(
+            colour=discord.Colour.random(), timestamp=discord.utils.utcnow()
         )
         statics.add_field(
             name=":placard: Servidores:",
@@ -177,8 +176,8 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             value=platform.python_version()
         )
         statics.add_field(
-            name="<:discord:825122469278908446> Discord Library (Disnake)",
-            value=disnake.__version__
+            name="<:discord:825122469278908446> Discord Library (d.py)",
+            value=discord.__version__
         )  # type: ignore
         statics.add_field(
             name="<:api:830084663547920464> Ping API:",
@@ -223,7 +222,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         verification = levels[verification]
         bot = 0
         Splash, Banner = None, None
-        dt = disnake.utils.utcnow()
+        dt = discord.utils.utcnow()
         date = server.created_at.replace(
             tzinfo=pytz.timezone('America/Sao_Paulo')
         )
@@ -231,7 +230,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         for member in server.members:
             if member.bot:
                 bot += 1
-        Embeder = disnake.Embed(
+        Embeder = discord.Embed(
             title=server.name, colour=0x3399ff, timestamp=dt
         )
         Embeder.add_field(
@@ -269,15 +268,15 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             inline=False
         )
         Embeder.set_thumbnail(url=server.icon.url)
-        Icon = disnake.Embed(
-            title="Icon", colour=disnake.Colour.random(), timestamp=dt
+        Icon = discord.Embed(
+            title="Icon", colour=discord.Colour.random(), timestamp=dt
         )
         Icon.set_image(url=server.icon.url)
         viewer = []
         viewer.append(Embeder), viewer.append(Icon)
         if server.banner:
-            Banner = disnake.Embed(
-                title="Banner", colour=disnake.Colour.random(), timestamp=dt
+            Banner = discord.Embed(
+                title="Banner", colour=discord.Colour.random(), timestamp=dt
             )
             Banner.set_image(url=server.banner)
             Banner.set_footer(
@@ -286,8 +285,8 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             )
             viewer.append(Banner)
         if server.splash:
-            Splash = disnake.Embed(
-                title="Splash", colour=disnake.Colour.random(), timestamp=dt
+            Splash = discord.Embed(
+                title="Splash", colour=discord.Colour.random(), timestamp=dt
             )
             Splash.set_image(url=server.splash)
             Splash.set_footer(
@@ -325,9 +324,9 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         role = role.replace(">", "")
         role = role.replace("&", "")
         role = role.replace("@", "")
-        dt = disnake.utils.utcnow()
+        dt = discord.utils.utcnow()
 
-        class Viewer(disnake.ui.View):
+        class Viewer(discord.ui.View):
             def __init__(self):
                 super().__init__(timeout=60.0)
 
@@ -360,20 +359,20 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                  if role.upper() in k]  #Tenta com a string em caps
             ]
             if len(attempt[0]) == 1:
-                role = disnake.utils.get(ctx.guild.roles, name=attempt[0][0])
+                role = discord.utils.get(ctx.guild.roles, name=attempt[0][0])
             elif len(attempt[0]) < 1:
                 if len(attempt[1]) == 1:
-                    role = disnake.utils.get(
+                    role = discord.utils.get(
                         ctx.guild.roles, name=attempt[1][0]
                     )
                 elif len(attempt[1]) < 1:
                     if len(attempt[2]) == 1:
-                        role = disnake.utils.get(
+                        role = discord.utils.get(
                             ctx.guild.roles, name=attempt[2][0]
                         )
                     else:
                         for r in attempt[2]:
-                            rl = disnake.utils.get(ctx.guild.roles, name=r)
+                            rl = discord.utils.get(ctx.guild.roles, name=r)
                             if r == rl.name:
                                 if len(ri["name"]) > 24:
                                     ri2["name"].append(r)
@@ -383,7 +382,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                                     ri["id"].append(rl.id)
                         if len(ri["name"]) < 1:
                             return await ctx.send(
-                                embed=disnake.Embed(
+                                embed=discord.Embed(
                                     colour=0x3399ff,
                                     description=
                                     "Não encontrei nenhum cargo com esse nome."
@@ -406,7 +405,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                                 if view.is_finished() is False:
                                     return await c.edit(
                                         content=None,
-                                        embed=disnake.Embed(
+                                        embed=discord.Embed(
                                             colour=0x3399ff,
                                             description=
                                             f'{self.bot.utils["emoji"]["cancel"]} Comando cancelado !'
@@ -416,7 +415,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
 
                 else:
                     for r in attempt[1]:
-                        rl = disnake.utils.get(ctx.guild.roles, name=r)
+                        rl = discord.utils.get(ctx.guild.roles, name=r)
                         if r == rl.name:
                             if len(ri["name"]) > 24:
                                 ri2["name"].append(r), ri2["id"].append(rl.id)
@@ -425,7 +424,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                     if len(ri["name"]) < 1:
                         return await ctx.send(
                             content=None,
-                            embed=disnake.Embed(
+                            embed=discord.Embed(
                                 colour=0x3399ff,
                                 description=
                                 "Não encontrei nenhum cargo com esse nome."
@@ -445,7 +444,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                             if view.is_finished() is False:
                                 return await e.edit(
                                     content=None,
-                                    embed=disnake.Embed(
+                                    embed=discord.Embed(
                                         colour=0x3399ff,
                                         description=
                                         f'{self.bot.utils["emoji"]["cancel"]} Comando cancelado !'
@@ -454,9 +453,9 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                                 )
             else:
                 for r in te:
-                    rl = disnake.utils.get(ctx.guild.roles, name=r)
+                    rl = discord.utils.get(ctx.guild.roles, name=r)
                     if r == role:
-                        ress, role = r, disnake.utils.get(
+                        ress, role = r, discord.utils.get(
                             ctx.guild.roles, name=r
                         )
                     if r == rl.name:
@@ -469,7 +468,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                 if len(ri["name"]) < 1:
                     return await ctx.send(
                         content=None,
-                        embed=disnake.Embed(
+                        embed=discord.Embed(
                             colour=0x3399ff,
                             description=
                             "Não encontrei nenhum cargo com esse nome."
@@ -491,7 +490,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
                             if view.is_finished() is False:
                                 return await g.edit(
                                     content=None,
-                                    embed=disnake.Embed(
+                                    embed=discord.Embed(
                                         colour=0x3399ff,
                                         description=
                                         f'{self.bot.utils["emoji"]["cancel"]} Comando cancelado !'
@@ -512,7 +511,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             date = role.created_at.replace(
                 tzinfo=pytz.timezone('America/Sao_Paulo')
             )
-            Embed = disnake.Embed(
+            Embed = discord.Embed(
                 colour=role.color,
                 timestamp=dt,
                 description=f"⦂⦂ **ID**: `{role.id}`\n"
@@ -533,7 +532,7 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             return await ctx.send(embed=Embed)
         else:
             return await ctx.send(
-                embed=disnake.Embed(
+                embed=discord.Embed(
                     colour=0x3399ff,
                     description="Não consegui encontrei nenhum cargo..."
                 )
@@ -542,8 +541,8 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
     #==================================================================
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(Info(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(Info(bot))
     print(
         "\033[1;92m[Cog Load]\033[1;94m Information\033[1;96m carregado com sucesso !"
     )

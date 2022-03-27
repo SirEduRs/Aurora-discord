@@ -24,10 +24,10 @@ SOFTWARE.
 
 from io import BytesIO
 
-import disnake
+import discord
 import humanize  # type: ignore
-from disnake.ext import commands
-from disnake.ext.commands import errors  # type: ignore
+from discord.ext import commands
+from discord.ext.commands import errors  # type: ignore
 
 from Aurora import AuroraClass
 from Utils import Database
@@ -122,14 +122,14 @@ class Errors(commands.Cog):
         if ctx.command:
             if len(lines) > 1500:
                 result = BytesIO(lines.encode('utf-8'))
-                file = disnake.File(fp=result, filename=f"error.txt")
-                EMBED = disnake.Embed(colour=disnake.Colour.red())
+                file = discord.File(fp=result, filename=f"error.txt")
+                EMBED = discord.Embed(colour=discord.Colour.red())
                 EMBED.description = f"_Comando_: **`{ctx.command.name}`**\n" \
                      f"_Usuário_: **`{ctx.author}`**\n"
                 await CHANNEL_LOG.send(embed=EMBED)
                 await CHANNEL_LOG.send(file=file)
             else:
-                EMBED = disnake.Embed(colour=disnake.Colour.red())
+                EMBED = discord.Embed(colour=discord.Colour.red())
                 EMBED.description = f"_Comando_: **`{ctx.command.name}`**\n" \
                      f"_Usuário_: **`{ctx.author}`**\n" \
                      f"```py\n{lines}```"
@@ -138,13 +138,13 @@ class Errors(commands.Cog):
         else:
             if len(lines) > 1500:
                 result = BytesIO(lines.encode('utf-8'))
-                file = disnake.File(fp=result, filename=f"error.txt")
-                EMBED = disnake.Embed(colour=disnake.Colour.red())
+                file = discord.File(fp=result, filename=f"error.txt")
+                EMBED = discord.Embed(colour=discord.Colour.red())
                 EMBED.description = f"_Usuário_: **`{ctx.author}`**\n"
                 await CHANNEL_LOG.send(embed=EMBED)
                 await CHANNEL_LOG.send(file=file)
             else:
-                EMBED = disnake.Embed(colour=disnake.Colour.red())
+                EMBED = discord.Embed(colour=discord.Colour.red())
                 EMBED.description = f"_Usuário_: **`{ctx.author}`**\n" \
                      f"```py\n{lines}```"
                 await CHANNEL_LOG.send(embed=EMBED)
@@ -152,8 +152,8 @@ class Errors(commands.Cog):
         raise error
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(Errors(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(Errors(bot))
     print(
         "\033[1;95m[Events Load]\033[1;94m Error Event\033[1;96m carregado com sucesso !"
     )

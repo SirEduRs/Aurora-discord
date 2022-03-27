@@ -24,11 +24,11 @@ SOFTWARE.
 
 from datetime import datetime
 
-import disnake
+import discord
 import pytz
-from disnake import Embed
-from disnake.ext import commands
-from disnake.ext.commands import Command
+from discord import Embed
+from discord.ext import commands
+from discord.ext.commands import Command
 
 from Aurora import AuroraClass
 from Utils.Database import Database
@@ -93,8 +93,8 @@ class Help(commands.Cog, name=":clipboard: Ajuda"):
                     await ctx.send(embed=embed)
             else:
                 await ctx.send(
-                    embed=disnake.Embed(
-                        colour=disnake.Colour.random(),
+                    embed=discord.Embed(
+                        colour=discord.Colour.random(),
                         description=
                         f"Não encontrei nenhum comando com esse nome !!"
                     ).set_footer(
@@ -154,8 +154,8 @@ class Help(commands.Cog, name=":clipboard: Ajuda"):
             await ctx.send(embed=page)
 
 
-def setup(bot: AuroraClass):
-    bot.add_cog(Help(bot))
+async def setup(bot: AuroraClass):
+    await bot.add_cog(Help(bot))
     print(
         "\033[1;92m[Cog Load]\033[1;94m Help\033[1;96m carregado com sucesso !"
     )

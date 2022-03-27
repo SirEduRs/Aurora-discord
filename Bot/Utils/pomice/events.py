@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Dict, TypeAlias
 
-from disnake import Client
+from discord import Client
 
 from .objects import Track
 from .player import Player
