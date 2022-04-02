@@ -5,7 +5,7 @@ on: [push]
 jobs:
   format:
     runs-on: ubuntu-latest
-    working-directory: ./Bot
+    working-directory: Bot
     steps:
       #----------------------------------------------
       #       check-out repo and set-up python
