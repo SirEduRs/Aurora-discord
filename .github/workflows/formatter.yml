@@ -38,6 +38,7 @@ jobs:
       # install dependencies if cache does not exist
       #----------------------------------------------
       - name: Install dependencies
+        working-directory: ./Bot
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root
 
@@ -45,6 +46,7 @@ jobs:
       # Resolving Formaters
       #----------------------------------------------
       - name: Run Yapf and Isort.
+        working-directory: ./Bot
         run: |
           poetry run yapf -r -i --verbose .
           poetry run isort .
