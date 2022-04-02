@@ -1,6 +1,10 @@
 name: Deploy
 
-on: [push]
+on:
+  workflow_run:
+    workflows: ["Formatting"]
+    types:
+      - completed
 
 jobs:
   build:
@@ -8,8 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v1
-
+    - uses: actions/checkout@v3
     - name: Copy repository to vps
       uses: appleboy/scp-action@master
       env:

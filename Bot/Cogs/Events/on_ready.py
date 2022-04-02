@@ -36,13 +36,13 @@ class On_ReadyEvent(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        """await self.bot.pomice.create_node(
+        await self.bot.pomice.create_node(
             bot=self.bot,
-            host=environ['LAVALINK_IP'],
+            host='lavalink',
             port='2333',
             password=environ['LAVALINK_PASS'],
-            identifier='São Paulo'
-        )"""
+            identifier='One',
+        )
         await self.bot.pool.execute(
             "CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, account text UNIQUE);"
         )
