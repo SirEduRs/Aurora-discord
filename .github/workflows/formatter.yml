@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./Bot
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --no-root
+        run: poetry install --no-interaction --dev-only
 
       #----------------------------------------------
       # Resolving Formaters
@@ -39,7 +39,7 @@ jobs:
       - name: Run Yapf and Isort.
         working-directory: ./Bot
         run: |
-          poetry run yapf -r -i --verbose .
+          poetry run yapf -r -i --exclude '.venv' --verbose .
           poetry run isort .
 
       #----------------------------------------------
