@@ -31,7 +31,7 @@ jobs:
       - name: Install dependencies
         working-directory: ./Bot
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
-        run: poetry install --no-interaction --dev-only
+        run: poetry install --no-interaction --no-root
 
       #----------------------------------------------
       # Resolving Formaters
