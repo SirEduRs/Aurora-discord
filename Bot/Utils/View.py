@@ -27,7 +27,7 @@ import json
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, TypeAlias
 
 import discord
-import pytz
+import pytz # type: ignore
 from discord.ext import commands
 
 from .Utilidades import permissions
@@ -102,7 +102,7 @@ class Select(discord.ui.Select):  # type: ignore
 
     async def callback(self, interaction: discord.Interaction):
         role = discord.utils.get(
-            self.guild.roles, name=interaction.values[0]
+            self.guild.roles, name=interaction.data['values'][0]
         )  # type: ignore
         if role:
             members: List[str] = list()
@@ -164,14 +164,14 @@ class ViewConfirm(discord.ui.View):
     @discord.ui.button(
         emoji=_emoji["confirm"], style=discord.ButtonStyle.green
     )  # type: ignore
-    async def _confirm(self, _):
+    async def _confirm(self, inter: discord.Interaction):
         self.value = True
         self.stop()
 
     @discord.ui.button(
         emoji=_emoji["cancel"], style=discord.ButtonStyle.red
     )  # type: ignore
-    async def _cancel(self, _):
+    async def _cancel(self, inter: discord.Interaction):
         self.value = False
         self.stop()
 

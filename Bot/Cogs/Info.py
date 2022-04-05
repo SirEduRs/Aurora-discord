@@ -34,6 +34,8 @@ from discord import app_commands
 from discord.ext import commands
 from humanize import i18n, naturalsize, precisedelta  # type: ignore
 from stopwatch import Stopwatch as timer  # type: ignore
+from github import Github
+from os import environ
 
 from Aurora import AuroraClass
 from Utils import Paginator, Select
@@ -144,6 +146,19 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
         versionsql = await self.bot.pool.fetch(
             'SELECT version();'
         )  # type: ignore
+
+        Repo = (Github(environ['GITHUB_KEY'])).get_repo("SirEduRs/Aurora-discord")
+        Commits, txt = list(), ""
+        [Commits.append(Commit.commit) for Commit in Repo.get_commits()[:3]]
+
+        for Commit in Commits:
+            date = Commit.committer.date.astimezone(pytz.timezone("America/Sao_Paulo"))
+            date = discord.utils.format_dt(date, "R")
+            txt += f"**[{Commit.sha[:7]}]({Commit.html_url})**: {Commit.message} ({date})\n"
+
+        Updates = discord.Embed(title="Ultimas Atualizações:", colour=0x1A4C7F)
+        Updates.description = txt
+
         uptime = precisedelta(uptime, format='%0.0f')  # type: ignore
         commands_bot = await self.bot.fdb.get_document(
             'bot', 'commands'
@@ -199,7 +214,10 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             text=f"Comando usado por {ctx.author.name}",
             icon_url=ctx.author.display_avatar
         )
-        await ctx.send(embed=statics)
+
+        View = Paginator([statics, Updates], ctx.author.id)
+
+        await ctx.send(embed=statics, view=View)
 
     #=================================================================
 

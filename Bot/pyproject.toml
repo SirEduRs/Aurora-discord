@@ -21,11 +21,12 @@ Pillow = "^9.0.0"
 toml = "^0.10.2"
 "discord.py" = {git = "https://github.com/Rapptz/discord.py", rev = "master"}
 jishaku = {git = "https://github.com/Gorialis/jishaku", rev = "master"}
+PyGithub = "^1.55"
 
 [tool.poetry.dev-dependencies]
-mypy = "^0.931"
 yapf = "^0.32.0"
 isort = "^5.10.1"
+mypy = {git = "https://github.com/python/mypy.git"}
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
