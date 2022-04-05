@@ -27,7 +27,7 @@ import json
 from typing import TYPE_CHECKING, Any, Callable, Dict, List, TypeAlias
 
 import discord
-import pytz # type: ignore
+import pytz  # type: ignore
 from discord.ext import commands
 
 from .Utilidades import permissions

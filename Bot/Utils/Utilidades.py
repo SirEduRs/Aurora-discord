@@ -31,7 +31,7 @@ from typing import TYPE_CHECKING, Any, List, Tuple, TypeAlias
 
 import discord
 from discord.ext import commands
-from PIL import Image, ImageDraw #type: ignore
+from PIL import Image, ImageDraw  # type: ignore
 from pytz import timezone
 
 if TYPE_CHECKING:

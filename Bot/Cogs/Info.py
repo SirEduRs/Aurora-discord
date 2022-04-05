@@ -25,6 +25,7 @@ SOFTWARE.
 import platform
 from asyncio import sleep
 from datetime import datetime
+from os import environ
 from sys import platform as _platform
 
 import discord
@@ -32,10 +33,9 @@ import psutil  # type: ignore
 import pytz
 from discord import app_commands
 from discord.ext import commands
+from github import Github
 from humanize import i18n, naturalsize, precisedelta  # type: ignore
 from stopwatch import Stopwatch as timer  # type: ignore
-from github import Github
-from os import environ
 
 from Aurora import AuroraClass
 from Utils import Paginator, Select
@@ -147,12 +147,15 @@ class Info(commands.Cog, name=":newspaper: Informações"):  # type: ignore
             'SELECT version();'
         )  # type: ignore
 
-        Repo = (Github(environ['GITHUB_KEY'])).get_repo("SirEduRs/Aurora-discord")
+        Repo = (Github(environ['GITHUB_KEY']
+                      )).get_repo("SirEduRs/Aurora-discord")
         Commits, txt = list(), ""
         [Commits.append(Commit.commit) for Commit in Repo.get_commits()[:3]]
 
         for Commit in Commits:
-            date = Commit.committer.date.astimezone(pytz.timezone("America/Sao_Paulo"))
+            date = Commit.committer.date.astimezone(
+                pytz.timezone("America/Sao_Paulo")
+            )
             date = discord.utils.format_dt(date, "R")
             txt += f"**[{Commit.sha[:7]}]({Commit.html_url})**: {Commit.message} ({date})\n"
 
