@@ -363,9 +363,10 @@ def permissions(permission: str):
         "use_private_threads": "usar threads privadas",
         "create_public_threads": "Criar threads públicas",
         "create_private_threads": "Criar threads privadas",
-        "view_guild_insights": "ver análises do servidor"
+        "view_guild_insights": "ver análises do servidor",
+        "manage_events": "Gerenciar eventos",
     }
-    return Permissions[permission]
+    return Permissions.get(permission)
 
 def draw_color(color: Tuple[int]):
     image = Image.new('RGB', (500, 200), color)
