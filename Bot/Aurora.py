@@ -77,7 +77,6 @@ class AuroraClass(Bot):
         self.owner_id: int = 416606375498481686
         self.db: Database = Database(self)
         self.fdb = Firebase(self)
-        self.reload = True
         self.pomice = NodePool()
 
         gc.enable()
