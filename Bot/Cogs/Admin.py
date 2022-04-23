@@ -22,16 +22,12 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 """
 
-from datetime import timedelta
-from typing import Any
-
 import discord
 from discord.ext import commands
 
 from Aurora import AuroraClass
 from Utils import ViewerAdmin
 from Utils.Utilidades import EmbedDefault as Embed
-from Utils.Utilidades import convert_time
 
 
 class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
@@ -209,114 +205,6 @@ class Admin(commands.Cog, name=":tools: Administração"):  # type: ignore
             ctx.guild.default_role, overwrite=everyone_perms
         )
         await Embed(ctx, txt)
-
-    @commands.slash_command()
-    @commands.has_guild_permissions(moderate_members=True)
-    @commands.bot_has_guild_permissions(moderate_members=True)
-    @commands.guild_only()
-    async def mute(
-        self,
-        inter: discord.ApplicationCommandInteraction,
-        member: discord.Member,
-        time: Any = "Máximo",
-        reason: str = None
-    ):
-        """Mute um membro por um tempo específico.
-
-		Parameters
-		----------
-		member: Membro do servidor.
-		time: Tempo. Exemplo: 30s, 1m, 1h, 1d, 1w, 1M, 1y.
-		reason: Motivo do mute.
-		"""
-        time = time.lower()
-        if time == "Máximo":
-            time = 2419200
-        else:
-            timer = convert_time("segundos", time)
-            if timer == time:
-                return await Embed(inter, "Tempo inválido.")
-
-        if member.id == inter.user.id:  # type: ignore
-            return await Embed(
-                inter, "Você não pode mutar a si mesmo.", ephemeral=True
-            )
-        elif member.id == inter.guild.owner.id:  # type: ignore
-            return await Embed(
-                inter,
-                "Você não pode mutar o dono(a) do servidor.",
-                ephemeral=True
-            )
-        elif member.id == inter.me.id:
-            return await Embed(inter, "Você não pode me mutar.", ephemeral=True)
-        elif member.top_role.position >= inter.me.top_role.position:  # type: ignore
-            return await Embed(
-                inter,
-                "Eu não posso mutar este membro. Ele possui um cargo igual ou maior que o meu.",
-                ephemeral=True
-            )
-
-        duration = timedelta(seconds=timer)
-
-        if reason is None:
-            reason = f"Author: **{inter.user}**. Nenhum motivo especificado."
-        else:
-            reason = f"Author: **{inter.user}**. Motivo: **{reason}**."
-
-        await member.timeout(duration=duration, reason=reason)
-        return await Embed(
-            inter,
-            f"O membro {member.mention} foi mutado por {time}.",
-            ephemeral=True
-        )
-
-    @commands.slash_command()  # type: ignore
-    @commands.has_guild_permissions(moderate_members=True)
-    @commands.bot_has_guild_permissions(moderate_members=True)
-    @commands.guild_only()
-    async def unmute(
-        self,
-        inter: discord.ApplicationCommandInteraction,
-        member: discord.Member,
-        reason: str = None
-    ):
-        """Desmuta um membro.
-
-		Parameters
-		----------
-		member: Membro do servidor.
-		reason: Motivo do unmute.
-		"""
-        if member.id == inter.user.id:  # type: ignore
-            return await Embed(
-                inter, "Você não pode desmutar a si mesmo.", ephemeral=True
-            )
-        elif member.id == inter.guild.owner.id:  # type: ignore
-            return await Embed(
-                inter,
-                "Você não pode desmutar o dono(a) do servidor.",
-                ephemeral=True
-            )
-        elif member.id == inter.me.id:
-            return await Embed(
-                inter, "Você não pode desmutar-me.", ephemeral=True
-            )
-        elif member.top_role.position >= inter.me.top_role.position:  # type: ignore
-            return await Embed(
-                inter,
-                "Eu não posso desmutar este membro. Ele possui um cargo igual ou maior que o meu.",
-                ephemeral=True
-            )
-
-        if reason is None:
-            reason = f"Author: **{inter.user}**. Nenhum motivo especificado."
-        else:
-            reason = f"Author: **{inter.user}**. Motivo: **{reason}**."
-
-        await member.timeout(duration=None, reason=reason)
-        return await Embed(
-            inter, f"O membro {member.mention} foi desmutado.", ephemeral=True
-        )
 
 
 async def setup(bot: AuroraClass):
