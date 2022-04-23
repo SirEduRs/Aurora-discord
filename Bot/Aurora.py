@@ -70,7 +70,6 @@ class AuroraClass(Bot):
         super().__init__(*args, **kwargs)  # type: ignore
         self.utils = {
             "uptime": datetime.now(),
-            "commands": 0,
             "emoji": _emoji,
             "api_key": os.getenv("API_KEY")
         }
