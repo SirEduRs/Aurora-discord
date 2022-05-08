@@ -61,7 +61,7 @@ class On_MemberEvents(commands.Cog):
                 )
             try:
                 cargo = discord.utils.get(
-                    member.guild.roles, id=838901535345868831
+                    member.guild.roles, id=972853079575777302
                 )
                 await member.add_roles(cargo)
             except Exception as e:
