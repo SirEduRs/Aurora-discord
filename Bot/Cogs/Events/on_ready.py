@@ -36,13 +36,16 @@ class On_ReadyEvent(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.pomice.create_node(
-            bot=self.bot,
-            host='lavalink',
-            port='2333',
-            password=environ['LAVALINK_PASS'],
-            identifier='One',
-        )
+        try:
+            await self.bot.pomice.create_node(
+                bot=self.bot,
+                host='lavalink',
+                port='2333',
+                password=environ['LAVALINK_PASS'],
+                identifier='One',
+            )
+        except Exception as e:
+            print(e)
         await self.bot.pool.execute(
             "CREATE TABLE IF NOT EXISTS users(id bigint PRIMARY KEY, account text UNIQUE);"
         )
