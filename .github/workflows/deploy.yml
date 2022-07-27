@@ -1,10 +1,6 @@
 name: Deploy
 
-on:
-  workflow_run:
-    workflows: ["Formatting"]
-    types:
-      - completed
+on: [push]
 
 jobs:
   build:
