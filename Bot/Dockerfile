@@ -5,9 +5,8 @@ ENV JISHAKU_NO_UNDERSCORE=true
 
 RUN apt-get update; \
     apt-get upgrade -y; \
-    apt-get install neofetch -y; \
     pip install --upgrade pip; \
-    pip install "poetry==1.1.13"; \
+    pip install "poetry==1.1.14"; \
     apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
     apt-get clean -y && rm -rf /var/lib/apt/lists/*;
 
